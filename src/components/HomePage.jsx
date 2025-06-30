@@ -1,48 +1,46 @@
 
 import React, { useState } from 'react';
 import { Heart, Share2, Bookmark, MapPin, Clock, Star, Search, Filter, User, Calendar, Home, Compass } from 'lucide-react';
+import PostDetail from './PostDetail';
+import BookingFlow from './BookingFlow';
+import AppointmentsList from './AppointmentsList';
 
 const HomePage = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('home');
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'postDetail', 'booking', 'appointments'
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [prestationDetails, setPrestationDetails] = useState(null);
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [savedPosts, setSavedPosts] = useState(new Set());
 
   const posts = [
     {
       id: 1,
-      instituteName: "Nail Studio Paris",
-      location: "Paris 15ème",
+      instituteName: "Indigonails",
+      location: "Villeurbanne",
       image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400",
-      description: "Nouvelle collection automne 🍂 Manucure semi-permanente à partir de 35€",
+      description: "Et si on refraîchissait cette manucure ?",
       likes: 124,
       time: "2h",
       rating: 4.8,
       price: "35€",
-      services: ["Manucure", "Nail Art", "Semi-permanent"]
+      services: ["Manucure", "Nail Art", "Semi-permanent"],
+      user: {
+        name: "Lea",
+        greeting: "Salut, Lea"
+      }
     },
     {
       id: 2,
-      instituteName: "Beauty Corner",
+      instituteName: "GelX/Pose",
       location: "Lyon 3ème",
       image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400",
-      description: "Nail art personnalisé pour les fêtes ✨ Réservation en ligne disponible",
+      description: "Nouvelle collection automne 🍂",
       likes: 89,
       time: "4h",
       rating: 4.9,
       price: "45€",
       services: ["Nail Art", "Extension", "Pédicure"]
-    },
-    {
-      id: 3,
-      instituteName: "Ongles & Beauté",
-      location: "Marseille 8ème",
-      image: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400",
-      description: "Promo spéciale : -20% sur tous les soins jusqu'au 15 décembre 💖",
-      likes: 156,
-      time: "6h",
-      rating: 4.7,
-      price: "28€",
-      services: ["Manucure", "Soins", "Massage"]
     }
   ];
 
@@ -66,9 +64,58 @@ const HomePage = ({ onLogout }) => {
     setSavedPosts(newSavedPosts);
   };
 
-  const quickBooking = (institute) => {
-    alert(`Réservation rapide chez ${institute} - Fonctionnalité en cours de développement`);
+  const handlePostClick = (post) => {
+    setSelectedPost(post);
+    setCurrentView('postDetail');
   };
+
+  const handleBookAppointment = (post, prestation) => {
+    setSelectedPost(post);
+    setPrestationDetails(prestation);
+    setCurrentView('booking');
+  };
+
+  const handleBookingConfirm = () => {
+    setCurrentView('home');
+    setActiveTab('home');
+  };
+
+  const handleBackToHome = () => {
+    setCurrentView('home');
+    setSelectedPost(null);
+    setPrestationDetails(null);
+  };
+
+  const handleAppointmentsTab = () => {
+    setActiveTab('appointments');
+    setCurrentView('appointments');
+  };
+
+  // Render different views
+  if (currentView === 'postDetail') {
+    return (
+      <PostDetail 
+        post={selectedPost}
+        onBack={handleBackToHome}
+        onBookAppointment={handleBookAppointment}
+      />
+    );
+  }
+
+  if (currentView === 'booking') {
+    return (
+      <BookingFlow 
+        post={selectedPost}
+        prestationDetails={prestationDetails}
+        onBack={() => setCurrentView('postDetail')}
+        onConfirm={handleBookingConfirm}
+      />
+    );
+  }
+
+  if (currentView === 'appointments') {
+    return <AppointmentsList />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -79,7 +126,12 @@ const HomePage = ({ onLogout }) => {
             <div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-bold">💅</span>
             </div>
-            <h1 className="text-xl font-bold text-gray-800">NailSocial</h1>
+            <div>
+              <h1 className="text-xl font-bold text-gray-800">NailSocial</h1>
+              {posts[0]?.user && (
+                <p className="text-sm text-gray-600">{posts[0].user.greeting}</p>
+              )}
+            </div>
           </div>
           <div className="flex items-center space-x-3">
             <button className="relative p-2 text-gray-600 hover:text-pink-500 transition-colors">
@@ -144,11 +196,11 @@ const HomePage = ({ onLogout }) => {
                 </div>
 
                 {/* Image */}
-                <div className="relative">
+                <div className="relative" onClick={() => handlePostClick(post)}>
                   <img
                     src={post.image}
                     alt="Nail art"
-                    className="w-full h-80 object-cover"
+                    className="w-full h-80 object-cover cursor-pointer"
                   />
                   <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-sm font-semibold text-pink-600">
                     {post.price}
@@ -201,7 +253,7 @@ const HomePage = ({ onLogout }) => {
                 {/* Bouton réservation rapide */}
                 <div className="px-4 pb-4">
                   <button
-                    onClick={() => quickBooking(post.instituteName)}
+                    onClick={() => handlePostClick(post)}
                     className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-2xl font-semibold hover:from-pink-600 hover:to-rose-600 transition-all transform hover:scale-[1.02]"
                   >
                     Réserver en 2 clics
@@ -318,7 +370,7 @@ const HomePage = ({ onLogout }) => {
             }`}
           >
             <Home size={20} />
-            <span className="text-xs">Accueil</span>
+            <span className="text-xs">Feed</span>
           </button>
           <button
             onClick={() => setActiveTab('explore')}
@@ -326,17 +378,17 @@ const HomePage = ({ onLogout }) => {
               activeTab === 'explore' ? 'text-pink-500' : 'text-gray-400'
             }`}
           >
-            <Compass size={20} />
-            <span className="text-xs">Explorer</span>
+            <Search size={20} />
+            <span className="text-xs">Rechercher</span>
           </button>
           <button
-            onClick={() => setActiveTab('appointments')}
+            onClick={handleAppointmentsTab}
             className={`flex flex-col items-center space-y-1 py-2 ${
               activeTab === 'appointments' ? 'text-pink-500' : 'text-gray-400'
             }`}
           >
             <Calendar size={20} />
-            <span className="text-xs">RDV</span>
+            <span className="text-xs">MES RDV</span>
           </button>
           <button
             onClick={() => setActiveTab('profile')}
