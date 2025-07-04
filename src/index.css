@@ -69,6 +69,41 @@
   }
 }
 
+/* Custom colors for the app */
+.btn-dark-blue {
+  background-color: #1e293b;
+  color: white;
+}
+
+.btn-dark-blue:hover {
+  background-color: #0f172a;
+}
+
+.btn-pink {
+  background-color: #ec4899;
+  color: white;
+}
+
+.btn-pink:hover {
+  background-color: #db2777;
+}
+
+.border-pink {
+  border-color: #ec4899;
+}
+
+.text-pink {
+  color: #ec4899;
+}
+
+.bg-pink {
+  background-color: #ec4899;
+}
+
+.bg-pink-light {
+  background-color: #fce7f3;
+}
+
 /* Mobile responsive improvements */
 @layer utilities {
   .safe-area-pb {

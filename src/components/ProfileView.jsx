@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Settings, Star, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Settings, Star, ChevronRight, Calendar } from 'lucide-react';
 import SettingsModal from './SettingsModal';
 
 const ProfileView = ({ onBack, onLogout }) => {
@@ -19,7 +19,9 @@ const ProfileView = ({ onBack, onLogout }) => {
     { id: 3, image: 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=200&h=200&fit=crop', likes: 87 },
     { id: 4, image: 'https://images.unsplash.com/photo-1604654894058-0a8b1b6b6d10?w=200&h=200&fit=crop', likes: 112 },
     { id: 5, image: 'https://images.unsplash.com/photo-1583792208416-cb7a0707b2fa?w=200&h=200&fit=crop', likes: 156 },
-    { id: 6, image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=200&h=200&fit=crop', likes: 203 }
+    { id: 6, image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=200&h=200&fit=crop', likes: 203 },
+    { id: 7, image: 'https://images.unsplash.com/photo-1607734834519-d8576ae60ea4?w=200&h=200&fit=crop', likes: 176 },
+    { id: 8, image: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=200&h=200&fit=crop', likes: 142 }
   ];
 
   const subscriptions = [
@@ -57,7 +59,7 @@ const ProfileView = ({ onBack, onLogout }) => {
     },
     {
       id: 5,
-      name: 'Nails Lab',
+      name: 'Nail Paradise',
       address: '12 Rue Alexandre Boutin, 69100 Villeurbanne',
       distance: '1,8 km',
       rating: 4.6,
@@ -88,6 +90,22 @@ const ProfileView = ({ onBack, onLogout }) => {
       rating: 4,
       date: '28 février 2024',
       comment: 'Très bon travail, pose de vernis semi-permanent impeccable. Seul bémol, l\'attente était un peu longue.',
+      readMore: false
+    },
+    {
+      id: 4,
+      institute: 'French Institut',
+      rating: 5,
+      date: '15 février 2024',
+      comment: 'Parfait comme toujours ! Service de qualité et accueil chaleureux.',
+      readMore: false
+    },
+    {
+      id: 5,
+      institute: 'Nail Paradise',
+      rating: 4,
+      date: '2 février 2024',
+      comment: 'Très satisfaite de ma manucure. Travail soigné et tarifs raisonnables.',
       readMore: false
     }
   ];
@@ -160,10 +178,10 @@ const ProfileView = ({ onBack, onLogout }) => {
 
       {/* Content */}
       <div className="pb-24 min-h-screen">
-        {/* Posts Grid */}
+        {/* Posts Grid - Layout 2x2 comme sur l'image */}
         {activeTab === 'posts' && (
-          <div className="p-4">
-            <div className="grid grid-cols-2 gap-3">
+          <div className="p-3">
+            <div className="grid grid-cols-2 gap-2">
               {posts.map((post) => (
                 <div key={post.id} className="relative">
                   <img
@@ -171,7 +189,7 @@ const ProfileView = ({ onBack, onLogout }) => {
                     alt="Nail art"
                     className="w-full aspect-square object-cover rounded-lg"
                   />
-                  <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                  <div className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-xs font-medium">
                     ❤️ {post.likes}
                   </div>
                 </div>
@@ -184,9 +202,9 @@ const ProfileView = ({ onBack, onLogout }) => {
         {activeTab === 'subscriptions' && (
           <div className="p-4 space-y-3">
             {subscriptions.map((sub) => (
-              <div key={sub.id} className="bg-white rounded-lg p-4 flex items-center space-x-3 shadow-sm">
-                <div className="w-12 h-12 bg-pink-50 rounded-full flex items-center justify-center">
-                  <span className="text-pink-500">{sub.logo}</span>
+              <div key={sub.id} className="bg-white rounded-xl p-4 flex items-center space-x-3 shadow-sm border border-gray-100">
+                <div className="w-12 h-12 bg-pink-light rounded-full flex items-center justify-center">
+                  <span className="text-pink-600">{sub.logo}</span>
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900">{sub.name}</h3>
@@ -242,11 +260,11 @@ const ProfileView = ({ onBack, onLogout }) => {
             {/* Reviews List */}
             <div className="p-4 space-y-4">
               {reviews.map((review) => (
-                <div key={review.id} className="bg-white rounded-lg p-4 shadow-sm">
+                <div key={review.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-pink-50 rounded-full flex items-center justify-center">
-                        <span className="text-pink-500">💅</span>
+                      <div className="w-10 h-10 bg-pink-light rounded-full flex items-center justify-center">
+                        <span className="text-pink-600">💅</span>
                       </div>
                       <span className="font-medium text-gray-900">{review.institute}</span>
                     </div>
@@ -283,7 +301,7 @@ const ProfileView = ({ onBack, onLogout }) => {
             <span className="text-xs font-medium">Rechercher</span>
           </button>
           <button className="flex flex-col items-center space-y-1 py-2 px-3 text-gray-400">
-            <div className="w-5 h-5 flex items-center justify-center">📅</div>
+            <Calendar size={20} />
             <span className="text-xs font-medium">MES RDV</span>
           </button>
           <button className="flex flex-col items-center space-y-1 py-2 px-3 text-pink-500">

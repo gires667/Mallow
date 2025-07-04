@@ -5,7 +5,7 @@ import ReviewModal from './ReviewModal';
 import MessageModal from './MessageModal';
 import ProfileView from './ProfileView';
 
-const AppointmentsList = ({ onBack, onLogout }) => {
+const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
@@ -45,12 +45,34 @@ const AppointmentsList = ({ onBack, onLogout }) => {
       service: 'Extension d\'ongles',
       status: 'pending',
       logo: '💅'
+    },
+    {
+      id: 4,
+      date: '30 mars 2024',
+      time: '10h00',
+      institute: 'Nail Paradise',
+      address: '20 Rue Victor Hugo, 69003 Lyon',
+      distance: '2,5 km',
+      service: 'Nail Art créatif',
+      status: 'confirmed',
+      logo: '💅'
+    },
+    {
+      id: 5,
+      date: '2 avril 2024',
+      time: '15h30',
+      institute: 'Beauty Studio',
+      address: '5 Place des Terreaux, 69001 Lyon',
+      distance: '3,1 km',
+      service: 'Manucure française',
+      status: 'confirmed',
+      logo: '💅'
     }
   ];
 
   const pastAppointments = [
     {
-      id: 4,
+      id: 6,
       date: '16 mars 2024',
       time: '11h30',
       institute: 'Nails Lab',
@@ -61,7 +83,7 @@ const AppointmentsList = ({ onBack, onLogout }) => {
       logo: '💅'
     },
     {
-      id: 5,
+      id: 7,
       date: '02 mars 2024',
       time: '9h30',
       institute: 'Sabrinails',
@@ -72,7 +94,7 @@ const AppointmentsList = ({ onBack, onLogout }) => {
       logo: '💅'
     },
     {
-      id: 6,
+      id: 8,
       date: '18 février 2024',
       time: '17h30',
       institute: 'Beauty Salon',
@@ -83,13 +105,35 @@ const AppointmentsList = ({ onBack, onLogout }) => {
       logo: '💅'
     },
     {
-      id: 7,
+      id: 9,
       date: '05 février 2024',
       time: '13h00',
       institute: 'French Institut',
       address: '15 Place Bellecour, 69002 Lyon',
       distance: '3,2 km',
       service: 'Nail Art personnalisé',
+      status: 'completed',
+      logo: '💅'
+    },
+    {
+      id: 10,
+      date: '22 janvier 2024',
+      time: '14h15',
+      institute: 'Nail Paradise',
+      address: '20 Rue Victor Hugo, 69003 Lyon',
+      distance: '2,5 km',
+      service: 'Extension gel',
+      status: 'completed',
+      logo: '💅'
+    },
+    {
+      id: 11,
+      date: '08 janvier 2024',
+      time: '16h00',
+      institute: 'Beauty Studio',
+      address: '5 Place des Terreaux, 69001 Lyon',
+      distance: '3,1 km',
+      service: 'Pédicure complète',
       status: 'completed',
       logo: '💅'
     }
@@ -107,6 +151,17 @@ const AppointmentsList = ({ onBack, onLogout }) => {
   const handleReview = (appointment) => {
     setSelectedAppointment(appointment);
     setShowReviewModal(true);
+  };
+
+  const handleRenew = (appointment) => {
+    // Trouver un post correspondant ou utiliser le premier
+    const matchingPost = posts?.find(post => 
+      post.instituteName.toLowerCase().includes(appointment.institute.toLowerCase())
+    ) || posts?.[0];
+    
+    if (matchingPost && onBookNew) {
+      onBookNew(matchingPost, { name: appointment.service, price: '35€' });
+    }
   };
 
   if (showProfile) {
@@ -132,15 +187,15 @@ const AppointmentsList = ({ onBack, onLogout }) => {
   }
 
   const renderAppointment = (appointment, isPast = false) => (
-    <div key={appointment.id} className="bg-white mx-4 mb-3 rounded-lg shadow-sm">
+    <div key={appointment.id} className="bg-white mx-4 mb-3 rounded-xl shadow-sm border border-gray-100">
       <div className="flex items-center p-4">
         <div className="flex items-center space-x-3 flex-1">
-          <div className="w-12 h-12 bg-pink-50 rounded-full flex items-center justify-center">
-            <span className="text-pink-500 text-lg">{appointment.logo}</span>
+          <div className="w-12 h-12 bg-pink-light rounded-full flex items-center justify-center">
+            <span className="text-pink-600 text-lg">{appointment.logo}</span>
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between mb-1">
-              <h3 className="font-medium text-gray-900">{appointment.institute}</h3>
+              <h3 className="font-semibold text-gray-900">{appointment.institute}</h3>
               <button 
                 className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center bg-white hover:bg-gray-50"
                 onClick={() => handleMoreDetails(appointment)}
@@ -156,10 +211,10 @@ const AppointmentsList = ({ onBack, onLogout }) => {
             <p className="text-sm text-gray-500">{appointment.address}</p>
           </div>
           <div className="text-right">
-            <div className="text-lg font-semibold text-gray-900">{appointment.time}</div>
+            <div className="text-lg font-bold text-gray-900">{appointment.time}</div>
             <div className="text-sm text-gray-500">{appointment.date}</div>
             {appointment.status === 'pending' && (
-              <div className="text-xs text-orange-500 mt-1">En attente</div>
+              <div className="text-xs text-orange-500 mt-1 font-medium">En attente</div>
             )}
           </div>
         </div>
@@ -168,14 +223,14 @@ const AppointmentsList = ({ onBack, onLogout }) => {
       {isPast && (
         <div className="px-4 pb-4 flex space-x-3">
           <button 
-            onClick={() => handleReview(appointment)}
-            className="flex-1 bg-gray-900 text-white py-2 px-4 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+            onClick={() => handleRenew(appointment)}
+            className="flex-1 btn-dark-blue py-3 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center"
           >
             📅 Renouveler
           </button>
           <button 
             onClick={() => handleReview(appointment)}
-            className="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors"
+            className="flex-1 border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors"
           >
             💬 Laisser un avis
           </button>
@@ -195,7 +250,7 @@ const AppointmentsList = ({ onBack, onLogout }) => {
               <Phone size={18} className="text-gray-600" />
             </button>
           </div>
-          <button className="flex items-center justify-center w-10 h-10 bg-pink-100 rounded-full hover:bg-pink-200 transition-colors">
+          <button className="flex items-center justify-center w-10 h-10 bg-pink-light rounded-full hover:bg-pink-200 transition-colors">
             <ChevronRight size={18} className="text-pink-600" />
           </button>
         </div>
@@ -220,7 +275,7 @@ const AppointmentsList = ({ onBack, onLogout }) => {
         <div className="flex">
           <button
             onClick={() => setActiveTab('upcoming')}
-            className={`flex-1 py-3 px-6 text-center font-medium transition-colors ${
+            className={`flex-1 py-3 px-6 text-center font-semibold transition-colors ${
               activeTab === 'upcoming'
                 ? 'text-gray-900 border-b-2 border-gray-900'
                 : 'text-gray-500 hover:text-gray-700'
@@ -230,7 +285,7 @@ const AppointmentsList = ({ onBack, onLogout }) => {
           </button>
           <button
             onClick={() => setActiveTab('past')}
-            className={`flex-1 py-3 px-6 text-center font-medium transition-colors ${
+            className={`flex-1 py-3 px-6 text-center font-semibold transition-colors ${
               activeTab === 'past'
                 ? 'text-gray-900 border-b-2 border-gray-900'
                 : 'text-gray-500 hover:text-gray-700'

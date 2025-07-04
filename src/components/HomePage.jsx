@@ -7,7 +7,7 @@ import ProfileView from './ProfileView';
 
 const HomePage = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('home');
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'postDetail', 'booking', 'appointments', 'profile'
+  const [currentView, setCurrentView] = useState('home');
   const [selectedPost, setSelectedPost] = useState(null);
   const [prestationDetails, setPrestationDetails] = useState(null);
   const [likedPosts, setLikedPosts] = useState(new Set());
@@ -41,6 +41,54 @@ const HomePage = ({ onLogout }) => {
       rating: 4.9,
       price: "45€",
       services: ["Nail Art", "Extension", "Pédicure"]
+    },
+    {
+      id: 3,
+      instituteName: "Beauty Studio",
+      location: "Lyon 2ème",
+      image: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400",
+      description: "Nail art personnalisé ✨",
+      likes: 156,
+      time: "1h",
+      rating: 4.7,
+      price: "50€",
+      services: ["Nail Art", "Manucure", "Design"]
+    },
+    {
+      id: 4,
+      instituteName: "Nails Paradise",
+      location: "Villeurbanne",
+      image: "https://images.unsplash.com/photo-1583792208416-cb7a0707b2fa?w=400",
+      description: "Extensions d'ongles premium 💎",
+      likes: 203,
+      time: "3h",
+      rating: 4.9,
+      price: "60€",
+      services: ["Extension", "Nail Art", "Premium"]
+    },
+    {
+      id: 5,
+      instituteName: "French Touch",
+      location: "Lyon 6ème",
+      image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400",
+      description: "Manucure française classique 🇫🇷",
+      likes: 98,
+      time: "2h",
+      rating: 4.6,
+      price: "40€",
+      services: ["Manucure", "French", "Classique"]
+    },
+    {
+      id: 6,
+      instituteName: "Nail Art Studio",
+      location: "Lyon 1er",
+      image: "https://images.unsplash.com/photo-1604654894058-0a8b1b6b6d10?w=400",
+      description: "Créations artistiques uniques 🎨",
+      likes: 187,
+      time: "1h",
+      rating: 4.8,
+      price: "55€",
+      services: ["Nail Art", "Créatif", "Unique"]
     }
   ];
 
@@ -121,7 +169,7 @@ const HomePage = ({ onLogout }) => {
   }
 
   if (currentView === 'appointments') {
-    return <AppointmentsList onBack={handleBackToHome} onLogout={onLogout} />;
+    return <AppointmentsList onBack={handleBackToHome} onLogout={onLogout} onBookNew={handleBookAppointment} posts={posts} />;
   }
 
   if (currentView === 'profile') {
