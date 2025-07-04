@@ -3,10 +3,11 @@ import { Heart, Share2, Bookmark, MapPin, Clock, Star, Search, Filter, User, Cal
 import PostDetail from './PostDetail';
 import BookingFlow from './BookingFlow';
 import AppointmentsList from './AppointmentsList';
+import ProfileView from './ProfileView';
 
 const HomePage = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('home');
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'postDetail', 'booking', 'appointments'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'postDetail', 'booking', 'appointments', 'profile'
   const [selectedPost, setSelectedPost] = useState(null);
   const [prestationDetails, setPrestationDetails] = useState(null);
   const [likedPosts, setLikedPosts] = useState(new Set());
@@ -81,13 +82,19 @@ const HomePage = ({ onLogout }) => {
 
   const handleBackToHome = () => {
     setCurrentView('home');
+    setActiveTab('home');
     setSelectedPost(null);
     setPrestationDetails(null);
   };
 
-  const handleAppointmentsTab = () => {
+  const handleViewAppointments = () => {
     setActiveTab('appointments');
     setCurrentView('appointments');
+  };
+
+  const handleViewProfile = () => {
+    setActiveTab('profile');
+    setCurrentView('profile');
   };
 
   // Render different views
@@ -108,12 +115,17 @@ const HomePage = ({ onLogout }) => {
         prestationDetails={prestationDetails}
         onBack={() => setCurrentView('postDetail')}
         onConfirm={handleBookingConfirm}
+        onViewAppointments={handleViewAppointments}
       />
     );
   }
 
   if (currentView === 'appointments') {
-    return <AppointmentsList onBack={handleBackToHome} />;
+    return <AppointmentsList onBack={handleBackToHome} onLogout={onLogout} />;
+  }
+
+  if (currentView === 'profile') {
+    return <ProfileView onBack={handleBackToHome} onLogout={onLogout} />;
   }
 
   return (
@@ -167,7 +179,7 @@ const HomePage = ({ onLogout }) => {
       )}
 
       {/* Content */}
-      <main className="max-w-md mx-auto pb-20">
+      <main className="max-w-md mx-auto pb-24">
         {activeTab === 'home' && (
           <div className="space-y-1">
             {posts.map((post) => (
@@ -360,43 +372,49 @@ const HomePage = ({ onLogout }) => {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-area-pb">
         <div className="max-w-md mx-auto flex justify-around">
           <button
-            onClick={() => setActiveTab('home')}
-            className={`flex flex-col items-center space-y-1 py-2 ${
+            onClick={() => {
+              setActiveTab('home');
+              setCurrentView('home');
+            }}
+            className={`flex flex-col items-center space-y-1 py-2 px-3 ${
               activeTab === 'home' ? 'text-pink-500' : 'text-gray-400'
             }`}
           >
             <Home size={20} />
-            <span className="text-xs">Feed</span>
+            <span className="text-xs font-medium">Feed</span>
           </button>
           <button
-            onClick={() => setActiveTab('explore')}
-            className={`flex flex-col items-center space-y-1 py-2 ${
+            onClick={() => {
+              setActiveTab('explore');
+              setCurrentView('home');
+            }}
+            className={`flex flex-col items-center space-y-1 py-2 px-3 ${
               activeTab === 'explore' ? 'text-pink-500' : 'text-gray-400'
             }`}
           >
             <Search size={20} />
-            <span className="text-xs">Rechercher</span>
+            <span className="text-xs font-medium">Rechercher</span>
           </button>
           <button
-            onClick={handleAppointmentsTab}
-            className={`flex flex-col items-center space-y-1 py-2 ${
+            onClick={handleViewAppointments}
+            className={`flex flex-col items-center space-y-1 py-2 px-3 ${
               activeTab === 'appointments' ? 'text-pink-500' : 'text-gray-400'
             }`}
           >
             <Calendar size={20} />
-            <span className="text-xs">MES RDV</span>
+            <span className="text-xs font-medium">MES RDV</span>
           </button>
           <button
-            onClick={() => setActiveTab('profile')}
-            className={`flex flex-col items-center space-y-1 py-2 ${
+            onClick={handleViewProfile}
+            className={`flex flex-col items-center space-y-1 py-2 px-3 ${
               activeTab === 'profile' ? 'text-pink-500' : 'text-gray-400'
             }`}
           >
             <User size={20} />
-            <span className="text-xs">Profil</span>
+            <span className="text-xs font-medium">Profil</span>
           </button>
         </div>
       </nav>

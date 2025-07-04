@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Settings, Star, ChevronRight } from 'lucide-react';
 import SettingsModal from './SettingsModal';
 
-const ProfileView = ({ onBack }) => {
+const ProfileView = ({ onBack, onLogout }) => {
   const [activeTab, setActiveTab] = useState('posts');
   const [showSettings, setShowSettings] = useState(false);
 
@@ -70,22 +70,30 @@ const ProfileView = ({ onBack }) => {
       id: 1,
       institute: 'Nails lab',
       rating: 5,
-      date: '13 mars 2022',
-      comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae rutbus erat mauris mauris mauris lorem mauris tincibus urna quis....',
-      readMore: true
+      date: '13 mars 2024',
+      comment: 'Excellent service ! L\'équipe est très professionnelle et le résultat est parfait. Je recommande vivement cet institut.',
+      readMore: false
     },
     {
       id: 2,
-      institute: 'Nails lab',
+      institute: 'Beauty Salon',
       rating: 5,
-      date: '8 mars 2022',
-      comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vitae rutbus erat mauris mauris mauris lorem mauris tincibus urna quis....',
-      readMore: true
+      date: '8 mars 2024',
+      comment: 'Super expérience, très satisfaite du nail art réalisé. L\'ambiance est très agréable et le personnel à l\'écoute.',
+      readMore: false
+    },
+    {
+      id: 3,
+      institute: 'Sabrinails',
+      rating: 4,
+      date: '28 février 2024',
+      comment: 'Très bon travail, pose de vernis semi-permanent impeccable. Seul bémol, l\'attente était un peu longue.',
+      readMore: false
     }
   ];
 
   if (showSettings) {
-    return <SettingsModal onBack={() => setShowSettings(false)} />;
+    return <SettingsModal onBack={() => setShowSettings(false)} onLogout={onLogout} />;
   }
 
   return (
@@ -122,7 +130,7 @@ const ProfileView = ({ onBack }) => {
             className={`flex-1 py-3 px-6 text-center text-sm font-medium transition-colors ${
               activeTab === 'posts'
                 ? 'text-pink-500 border-b-2 border-pink-500'
-                : 'text-gray-500'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             ENREGISTREMENTS
@@ -132,7 +140,7 @@ const ProfileView = ({ onBack }) => {
             className={`flex-1 py-3 px-6 text-center text-sm font-medium transition-colors ${
               activeTab === 'subscriptions'
                 ? 'text-pink-500 border-b-2 border-pink-500'
-                : 'text-gray-500'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             ABONNEMENTS
@@ -142,7 +150,7 @@ const ProfileView = ({ onBack }) => {
             className={`flex-1 py-3 px-6 text-center text-sm font-medium transition-colors ${
               activeTab === 'reviews'
                 ? 'text-pink-500 border-b-2 border-pink-500'
-                : 'text-gray-500'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             AVIS
@@ -151,7 +159,7 @@ const ProfileView = ({ onBack }) => {
       </div>
 
       {/* Content */}
-      <div className="pb-20">
+      <div className="pb-24 min-h-screen">
         {/* Posts Grid */}
         {activeTab === 'posts' && (
           <div className="p-4">
@@ -176,7 +184,7 @@ const ProfileView = ({ onBack }) => {
         {activeTab === 'subscriptions' && (
           <div className="p-4 space-y-3">
             {subscriptions.map((sub) => (
-              <div key={sub.id} className="bg-white rounded-lg p-4 flex items-center space-x-3">
+              <div key={sub.id} className="bg-white rounded-lg p-4 flex items-center space-x-3 shadow-sm">
                 <div className="w-12 h-12 bg-pink-50 rounded-full flex items-center justify-center">
                   <span className="text-pink-500">{sub.logo}</span>
                 </div>
@@ -218,7 +226,7 @@ const ProfileView = ({ onBack }) => {
                 <div className="space-y-1">
                   {[5, 4, 3, 2, 1].map((rating) => (
                     <div key={rating} className="flex items-center space-x-2 text-sm">
-                      <span className="text-gray-600">{rating} étoiles</span>
+                      <span className="text-gray-600 w-16">{rating} étoiles</span>
                       <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div 
                           className="h-full bg-yellow-400 rounded-full"
@@ -234,7 +242,7 @@ const ProfileView = ({ onBack }) => {
             {/* Reviews List */}
             <div className="p-4 space-y-4">
               {reviews.map((review) => (
-                <div key={review.id} className="bg-white rounded-lg p-4">
+                <div key={review.id} className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-pink-50 rounded-full flex items-center justify-center">
@@ -255,9 +263,6 @@ const ProfileView = ({ onBack }) => {
                   </div>
                   <p className="text-gray-700 text-sm leading-relaxed">
                     {review.comment}
-                    {review.readMore && (
-                      <button className="text-pink-500 ml-1 font-medium">Lire plus</button>
-                    )}
                   </p>
                 </div>
               ))}
@@ -267,22 +272,22 @@ const ProfileView = ({ onBack }) => {
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-area-pb">
         <div className="max-w-md mx-auto flex justify-around">
-          <button className="flex flex-col items-center space-y-1 py-2 text-gray-400">
-            <div className="w-6 h-6 flex items-center justify-center">🏠</div>
-            <span className="text-xs">Feed</span>
+          <button className="flex flex-col items-center space-y-1 py-2 px-3 text-gray-400">
+            <div className="w-5 h-5 flex items-center justify-center">🏠</div>
+            <span className="text-xs font-medium">Feed</span>
           </button>
-          <button className="flex flex-col items-center space-y-1 py-2 text-gray-400">
-            <div className="w-6 h-6 flex items-center justify-center">🔍</div>
-            <span className="text-xs">Rechercher</span>
+          <button className="flex flex-col items-center space-y-1 py-2 px-3 text-gray-400">
+            <div className="w-5 h-5 flex items-center justify-center">🔍</div>
+            <span className="text-xs font-medium">Rechercher</span>
           </button>
-          <button className="flex flex-col items-center space-y-1 py-2 text-gray-400">
-            <div className="w-6 h-6 flex items-center justify-center">📅</div>
-            <span className="text-xs">MES RDV</span>
+          <button className="flex flex-col items-center space-y-1 py-2 px-3 text-gray-400">
+            <div className="w-5 h-5 flex items-center justify-center">📅</div>
+            <span className="text-xs font-medium">MES RDV</span>
           </button>
-          <button className="flex flex-col items-center space-y-1 py-2 text-pink-500">
-            <div className="w-6 h-6 flex items-center justify-center">👤</div>
+          <button className="flex flex-col items-center space-y-1 py-2 px-3 text-pink-500">
+            <div className="w-5 h-5 flex items-center justify-center">👤</div>
             <span className="text-xs font-medium">Profil</span>
           </button>
         </div>
