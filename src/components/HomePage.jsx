@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Heart, Share2, Bookmark, MapPin, Clock, Star, Search, Filter, User, Calendar, Home, Compass } from 'lucide-react';
 import PostDetail from './PostDetail';
@@ -114,7 +113,7 @@ const HomePage = ({ onLogout }) => {
   }
 
   if (currentView === 'appointments') {
-    return <AppointmentsList />;
+    return <AppointmentsList onBack={handleBackToHome} />;
   }
 
   return (
