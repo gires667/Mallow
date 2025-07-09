@@ -104,6 +104,16 @@
   background-color: #fce7f3;
 }
 
+/* Hide scrollbar for horizontal scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Mobile responsive improvements */
 @layer utilities {
   .safe-area-pb {

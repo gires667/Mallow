@@ -184,6 +184,7 @@ const HomePage = ({ onLogout }) => {
         post={selectedPost}
         onBack={handleBackToHome}
         onBookAppointment={handleBookAppointment}
+        onInstituteClick={handleInstituteClick}
       />
     );
   }
@@ -249,7 +250,7 @@ const HomePage = ({ onLogout }) => {
         </div>
       </header>
 
-      {/* Search Bar */}
+      {/* Search Bar for explore tab */}
       {activeTab === 'explore' && (
         <div className="bg-white border-b border-gray-100 px-4 py-3">
           <div className="max-w-md mx-auto flex space-x-2">
@@ -468,7 +469,7 @@ const HomePage = ({ onLogout }) => {
         )}
       </main>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation - FIXED FUNCTIONALITY */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 safe-area-pb">
         <div className="max-w-md mx-auto flex justify-around">
           <button
@@ -496,7 +497,10 @@ const HomePage = ({ onLogout }) => {
             <span className="text-xs font-medium">Rechercher</span>
           </button>
           <button
-            onClick={handleViewAppointments}
+            onClick={() => {
+              setActiveTab('appointments');
+              setCurrentView('home');
+            }}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
               activeTab === 'appointments' ? 'text-gray-900' : 'text-gray-400'
             }`}
@@ -505,7 +509,10 @@ const HomePage = ({ onLogout }) => {
             <span className="text-xs font-medium">MES RDV</span>
           </button>
           <button
-            onClick={handleViewProfile}
+            onClick={() => {
+              setActiveTab('profile');
+              setCurrentView('home');
+            }}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
               activeTab === 'profile' ? 'text-gray-900' : 'text-gray-400'
             }`}

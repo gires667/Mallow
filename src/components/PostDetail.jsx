@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Share2, Bookmark, Heart, MapPin, Star, Clock, User } from 'lucide-react';
 
-const PostDetail = ({ post, onBack, onBookAppointment }) => {
+const PostDetail = ({ post, onBack, onBookAppointment, onInstituteClick }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
@@ -32,10 +32,13 @@ const PostDetail = ({ post, onBack, onBookAppointment }) => {
         />
       </div>
 
-      {/* Informations institut */}
+      {/* Informations institut - NOW CLICKABLE */}
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-3">
+          <button 
+            className="flex items-center space-x-3 hover:bg-gray-50 rounded-lg p-2 -m-2 transition-colors"
+            onClick={() => onInstituteClick(post)}
+          >
             <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
               <span className="text-white text-xs font-bold">💅</span>
             </div>
@@ -48,7 +51,7 @@ const PostDetail = ({ post, onBack, onBookAppointment }) => {
                 <span>4.2</span>
               </div>
             </div>
-          </div>
+          </button>
           <span className="text-pink-600 font-semibold">J'aime</span>
         </div>
 
@@ -135,7 +138,7 @@ const PostDetail = ({ post, onBack, onBookAppointment }) => {
       <div className="p-4 mt-6">
         <button
           onClick={() => onBookAppointment(post, prestationDetails)}
-          className="w-full bg-gray-800 text-white py-4 rounded-2xl font-semibold hover:bg-gray-900 transition-all"
+          className="w-full bg-slate-800 text-white py-4 rounded-2xl font-semibold hover:bg-slate-900 transition-all"
         >
           PRENDRE RDV
         </button>

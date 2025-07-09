@@ -1,11 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Camera, Check, Plus } from 'lucide-react';
 
 const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppointments }) => {
   const [selectedSpecialist, setSelectedSpecialist] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedDate, setSelectedDate] = useState('19');
+  const [selectedTime, setSelectedTime] = useState('11:00');
   const [comment, setComment] = useState('');
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -14,22 +14,27 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
     { id: 1, name: 'Lily', image: 'https://images.unsplash.com/photo-1494790108755-2616c78e8e7b?w=80&h=80&fit=crop&crop=face' },
     { id: 2, name: 'Yves', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face' },
     { id: 3, name: 'Coco', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face' },
-    { id: 4, name: 'Samia', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face' }
+    { id: 4, name: 'Samia', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face' },
+    { id: 5, name: 'Marie', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face' },
+    { id: 6, name: 'Alex', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=face' }
   ];
 
   const dates = [
     { date: '16', day: 'Dim', available: true },
     { date: '17', day: 'Lun', available: true },
     { date: '18', day: 'Mar', available: true },
-    { date: '19', day: 'Mer', available: true, selected: true },
+    { date: '19', day: 'Mer', available: true },
     { date: '20', day: 'Jeu', available: true },
     { date: '21', day: 'Ven', available: true },
-    { date: '22', day: 'Sam', available: true }
+    { date: '22', day: 'Sam', available: true },
+    { date: '23', day: 'Dim', available: true },
+    { date: '24', day: 'Lun', available: true }
   ];
 
   const timeSlots = [
     '9:00', '9:30', '10:00', '10:30', '11:00', '11:30',
-    '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'
+    '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
+    '17:00', '17:30', '18:00', '18:30'
   ];
 
   const handlePhotoUpload = (event) => {
@@ -76,7 +81,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
           <p className="text-gray-600 text-center mb-2">
             Vous pouvez consulter les informations
           </p>
-          <p className="text-gray-600 text-center mb-8">
+          <p className="text-gray-600 text-center mb-2">
             de vos rendez-vous dans
           </p>
           <p className="text-gray-600 text-center mb-12">
@@ -138,18 +143,18 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
           <button className="text-gray-500 text-sm mt-2">Ajouter une prestation</button>
         </div>
 
-        {/* 2. Sélectionner votre spécialiste */}
+        {/* 2. Sélectionner votre spécialiste - HORIZONTAL SCROLL */}
         <div>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">2. Sélectionnez votre spécialiste</h2>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
             {specialists.map((specialist) => (
               <button
                 key={specialist.id}
                 onClick={() => setSelectedSpecialist(specialist.name)}
-                className={`flex flex-col items-center space-y-2 p-2 rounded-xl transition-colors ${
+                className={`flex-shrink-0 flex flex-col items-center space-y-2 p-3 rounded-xl transition-colors ${
                   selectedSpecialist === specialist.name
-                    ? 'bg-pink-50 border border-pink-200'
-                    : 'hover:bg-gray-50'
+                    ? 'bg-pink-50 border-2 border-pink-500'
+                    : 'hover:bg-gray-50 border-2 border-transparent'
                 }`}
               >
                 <div className="w-14 h-14 rounded-full overflow-hidden">
@@ -165,21 +170,21 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
           </div>
         </div>
 
-        {/* 3. Sélectionner une date */}
+        {/* 3. Sélectionner une date - HORIZONTAL SCROLL */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900">3. Sélectionner une date</h2>
             <button className="text-gray-500 text-sm">Février ▼</button>
           </div>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
             {dates.map((dateOption, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedDate(dateOption.date)}
-                className={`flex flex-col items-center p-3 rounded-xl transition-colors ${
-                  selectedDate === dateOption.date || dateOption.selected
+                className={`flex-shrink-0 flex flex-col items-center p-3 rounded-xl transition-colors min-w-[60px] ${
+                  selectedDate === dateOption.date
                     ? 'bg-slate-800 text-white'
-                    : 'bg-white hover:bg-gray-50'
+                    : 'bg-white hover:bg-gray-50 border border-gray-200'
                 }`}
               >
                 <span className="text-xs mb-1">{dateOption.day}</span>
@@ -189,14 +194,23 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
           </div>
         </div>
 
-        {/* 4. Sélectionner un horaire */}
+        {/* 4. Sélectionner un horaire - HORIZONTAL SCROLL */}
         <div>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">4. Sélectionner un horaire</h2>
-          <div className="text-center mb-4">
-            <span className="text-2xl font-bold text-gray-900">11:00</span>
-          </div>
-          <div className="bg-gray-100 rounded-full h-2 mb-6">
-            <div className="bg-pink-500 h-2 rounded-full w-1/3"></div>
+          <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+            {timeSlots.map((time) => (
+              <button
+                key={time}
+                onClick={() => setSelectedTime(time)}
+                className={`flex-shrink-0 px-4 py-2 rounded-xl transition-colors min-w-[70px] ${
+                  selectedTime === time
+                    ? 'bg-slate-800 text-white'
+                    : 'bg-white hover:bg-gray-50 border border-gray-200'
+                }`}
+              >
+                <span className="text-sm font-medium">{time}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -234,9 +248,12 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
                   alt="Selected"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute top-1 right-1 w-5 h-5 bg-slate-800 rounded-full flex items-center justify-center">
+                <button 
+                  onClick={() => setSelectedPhoto(null)}
+                  className="absolute top-1 right-1 w-5 h-5 bg-slate-800 rounded-full flex items-center justify-center"
+                >
                   <span className="text-white text-xs">✕</span>
-                </div>
+                </button>
               </div>
             )}
           </div>
@@ -244,16 +261,22 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
           <p className="text-gray-600 text-sm mt-4">Ajouter un post enregistré</p>
         </div>
 
-        {/* Date et heure récap + Confirmer */}
+        {/* Date et heure récap + Confirmer - DYNAMIC UPDATE */}
         <div className="bg-white rounded-2xl p-4 border border-gray-100">
           <div className="flex justify-between items-center mb-4">
             <span className="text-gray-600">Date :</span>
-            <span className="font-semibold text-gray-900">19 février</span>
+            <span className="font-semibold text-gray-900">{selectedDate} février</span>
           </div>
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-4">
             <span className="text-gray-600">Horaire :</span>
-            <span className="font-semibold text-gray-900">11h00</span>
+            <span className="font-semibold text-gray-900">{selectedTime}</span>
           </div>
+          {selectedSpecialist && (
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-gray-600">Spécialiste :</span>
+              <span className="font-semibold text-gray-900">{selectedSpecialist}</span>
+            </div>
+          )}
           
           <button
             onClick={handleConfirm}
