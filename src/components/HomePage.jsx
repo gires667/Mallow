@@ -4,11 +4,13 @@ import PostDetail from './PostDetail';
 import BookingFlow from './BookingFlow';
 import AppointmentsList from './AppointmentsList';
 import ProfileView from './ProfileView';
+import InstituteDetail from './InstituteDetail';
 
 const HomePage = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('home');
   const [currentView, setCurrentView] = useState('home');
   const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedInstitute, setSelectedInstitute] = useState(null);
   const [prestationDetails, setPrestationDetails] = useState(null);
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [savedPosts, setSavedPosts] = useState(new Set());
@@ -89,6 +91,30 @@ const HomePage = ({ onLogout }) => {
       rating: 4.8,
       price: "55€",
       services: ["Nail Art", "Créatif", "Unique"]
+    },
+    {
+      id: 7,
+      instituteName: "Nails Lab",
+      location: "Villeurbanne",
+      image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400",
+      description: "Techniques innovantes 💫",
+      likes: 142,
+      time: "5h",
+      rating: 4.5,
+      price: "38€",
+      services: ["Innovation", "Nail Art", "Moderne"]
+    },
+    {
+      id: 8,
+      instituteName: "Crystal Nails",
+      location: "Lyon 7ème",
+      image: "https://images.unsplash.com/photo-1607734834519-d8576ae60ea4?w=400",
+      description: "Brillance et élégance ✨",
+      likes: 178,
+      time: "6h",
+      rating: 4.6,
+      price: "42€",
+      services: ["Crystal", "Élégance", "Premium"]
     }
   ];
 
@@ -117,6 +143,11 @@ const HomePage = ({ onLogout }) => {
     setCurrentView('postDetail');
   };
 
+  const handleInstituteClick = (post) => {
+    setSelectedInstitute(post);
+    setCurrentView('instituteDetail');
+  };
+
   const handleBookAppointment = (post, prestation) => {
     setSelectedPost(post);
     setPrestationDetails(prestation);
@@ -132,6 +163,7 @@ const HomePage = ({ onLogout }) => {
     setCurrentView('home');
     setActiveTab('home');
     setSelectedPost(null);
+    setSelectedInstitute(null);
     setPrestationDetails(null);
   };
 
@@ -156,12 +188,22 @@ const HomePage = ({ onLogout }) => {
     );
   }
 
+  if (currentView === 'instituteDetail') {
+    return (
+      <InstituteDetail 
+        institute={selectedInstitute}
+        onBack={handleBackToHome}
+        onBookService={handleBookAppointment}
+      />
+    );
+  }
+
   if (currentView === 'booking') {
     return (
       <BookingFlow 
         post={selectedPost}
         prestationDetails={prestationDetails}
-        onBack={() => setCurrentView('postDetail')}
+        onBack={() => setCurrentView(selectedInstitute ? 'instituteDetail' : 'postDetail')}
         onConfirm={handleBookingConfirm}
         onViewAppointments={handleViewAppointments}
       />
@@ -234,7 +276,10 @@ const HomePage = ({ onLogout }) => {
               <div key={post.id} className="bg-white">
                 {/* Header du post */}
                 <div className="flex items-center justify-between p-4 pb-3">
-                  <div className="flex items-center space-x-3">
+                  <button 
+                    className="flex items-center space-x-3 hover:bg-gray-50 rounded-lg p-1 -m-1 transition-colors"
+                    onClick={() => handleInstituteClick(post)}
+                  >
                     <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs font-bold">💅</span>
                     </div>
@@ -247,7 +292,7 @@ const HomePage = ({ onLogout }) => {
                         <span>{post.time}</span>
                       </div>
                     </div>
-                  </div>
+                  </button>
                   <div className="flex items-center space-x-1 text-sm">
                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
                     <span className="text-gray-600">{post.rating}</span>
@@ -329,14 +374,18 @@ const HomePage = ({ onLogout }) => {
               <h2 className="text-lg font-semibold text-gray-800 mb-3">Instituts près de chez vous</h2>
               <div className="space-y-3">
                 {posts.map((post) => (
-                  <div key={post.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                  <button
+                    key={post.id}
+                    onClick={() => handleInstituteClick(post)}
+                    className="w-full bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                  >
                     <div className="flex space-x-3">
                       <img
                         src={post.image}
                         alt="Institut"
                         className="w-16 h-16 rounded-xl object-cover"
                       />
-                      <div className="flex-1">
+                      <div className="flex-1 text-left">
                         <h3 className="font-semibold text-gray-800">{post.instituteName}</h3>
                         <div className="flex items-center space-x-1 text-sm text-gray-500 mb-1">
                           <MapPin size={12} />
@@ -351,7 +400,7 @@ const HomePage = ({ onLogout }) => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -420,7 +469,7 @@ const HomePage = ({ onLogout }) => {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-area-pb">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 safe-area-pb">
         <div className="max-w-md mx-auto flex justify-around">
           <button
             onClick={() => {
@@ -428,7 +477,7 @@ const HomePage = ({ onLogout }) => {
               setCurrentView('home');
             }}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
-              activeTab === 'home' ? 'text-pink-500' : 'text-gray-400'
+              activeTab === 'home' ? 'text-gray-900' : 'text-gray-400'
             }`}
           >
             <Home size={20} />
@@ -440,7 +489,7 @@ const HomePage = ({ onLogout }) => {
               setCurrentView('home');
             }}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
-              activeTab === 'explore' ? 'text-pink-500' : 'text-gray-400'
+              activeTab === 'explore' ? 'text-gray-900' : 'text-gray-400'
             }`}
           >
             <Search size={20} />
@@ -449,7 +498,7 @@ const HomePage = ({ onLogout }) => {
           <button
             onClick={handleViewAppointments}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
-              activeTab === 'appointments' ? 'text-pink-500' : 'text-gray-400'
+              activeTab === 'appointments' ? 'text-gray-900' : 'text-gray-400'
             }`}
           >
             <Calendar size={20} />
@@ -458,7 +507,7 @@ const HomePage = ({ onLogout }) => {
           <button
             onClick={handleViewProfile}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
-              activeTab === 'profile' ? 'text-pink-500' : 'text-gray-400'
+              activeTab === 'profile' ? 'text-gray-900' : 'text-gray-400'
             }`}
           >
             <User size={20} />

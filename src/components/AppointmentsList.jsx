@@ -1,15 +1,16 @@
-
 import React, { useState } from 'react';
 import { Calendar, MapPin, Clock, MessageCircle, Phone, ArrowLeft, Star, ChevronRight } from 'lucide-react';
 import ReviewModal from './ReviewModal';
 import MessageModal from './MessageModal';
 import ProfileView from './ProfileView';
+import AppointmentDetails from './AppointmentDetails';
 
 const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   const upcomingAppointments = [
@@ -141,6 +142,7 @@ const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
 
   const handleMoreDetails = (appointment) => {
     setSelectedAppointment(appointment);
+    setShowAppointmentDetails(true);
   };
 
   const handleMessage = (appointment) => {
@@ -190,7 +192,7 @@ const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
     <div key={appointment.id} className="bg-white mx-4 mb-3 rounded-xl shadow-sm border border-gray-100">
       <div className="flex items-center p-4">
         <div className="flex items-center space-x-3 flex-1">
-          <div className="w-12 h-12 bg-pink-light rounded-full flex items-center justify-center">
+          <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center">
             <span className="text-pink-600 text-lg">{appointment.logo}</span>
           </div>
           <div className="flex-1">
@@ -224,7 +226,7 @@ const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
         <div className="px-4 pb-4 flex space-x-3">
           <button 
             onClick={() => handleRenew(appointment)}
-            className="flex-1 btn-dark-blue py-3 px-4 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors flex items-center justify-center"
+            className="flex-1 bg-slate-800 text-white py-3 px-4 rounded-xl text-sm font-semibold hover:bg-slate-900 transition-colors flex items-center justify-center"
           >
             📅 Renouveler
           </button>
@@ -250,7 +252,7 @@ const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
               <Phone size={18} className="text-gray-600" />
             </button>
           </div>
-          <button className="flex items-center justify-center w-10 h-10 bg-pink-light rounded-full hover:bg-pink-200 transition-colors">
+          <button className="flex items-center justify-center w-10 h-10 bg-pink-100 rounded-full hover:bg-pink-200 transition-colors">
             <ChevronRight size={18} className="text-pink-600" />
           </button>
         </div>
@@ -260,6 +262,13 @@ const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {showAppointmentDetails && (
+        <AppointmentDetails
+          appointment={selectedAppointment}
+          onClose={() => setShowAppointmentDetails(false)}
+        />
+      )}
+
       {/* Header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div className="flex items-center justify-center p-4 relative">
@@ -328,7 +337,7 @@ const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
       </div>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 safe-area-pb">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 safe-area-pb">
         <div className="max-w-md mx-auto flex justify-around">
           <button className="flex flex-col items-center space-y-1 py-2 px-3 text-gray-400">
             <div className="w-5 h-5 flex items-center justify-center">🏠</div>
@@ -338,7 +347,7 @@ const AppointmentsList = ({ onBack, onLogout, onBookNew, posts }) => {
             <div className="w-5 h-5 flex items-center justify-center">🔍</div>
             <span className="text-xs font-medium">Rechercher</span>
           </button>
-          <button className="flex flex-col items-center space-y-1 py-2 px-3 text-pink-500">
+          <button className="flex flex-col items-center space-y-1 py-2 px-3 text-gray-900">
             <Calendar size={20} />
             <span className="text-xs font-medium">MES RDV</span>
           </button>
