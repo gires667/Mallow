@@ -151,7 +151,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
               <button
                 key={specialist.id}
                 onClick={() => setSelectedSpecialist(specialist.name)}
-                className={`flex-shrink-0 flex flex-col items-center space-y-2 p-3 rounded-xl transition-colors ${
+                className={`flex-shrink-0 flex flex-col items-center space-y-2 p-3 rounded-2xl transition-colors min-w-[80px] ${
                   selectedSpecialist === specialist.name
                     ? 'bg-pink-50 border-2 border-pink-500'
                     : 'hover:bg-gray-50 border-2 border-transparent'
@@ -181,7 +181,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
               <button
                 key={index}
                 onClick={() => setSelectedDate(dateOption.date)}
-                className={`flex-shrink-0 flex flex-col items-center p-3 rounded-xl transition-colors min-w-[60px] ${
+                className={`flex-shrink-0 flex flex-col items-center p-3 rounded-2xl transition-colors min-w-[60px] ${
                   selectedDate === dateOption.date
                     ? 'bg-slate-800 text-white'
                     : 'bg-white hover:bg-gray-50 border border-gray-200'
@@ -202,7 +202,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
               <button
                 key={time}
                 onClick={() => setSelectedTime(time)}
-                className={`flex-shrink-0 px-4 py-2 rounded-xl transition-colors min-w-[70px] ${
+                className={`flex-shrink-0 px-4 py-2 rounded-2xl transition-colors min-w-[70px] ${
                   selectedTime === time
                     ? 'bg-slate-800 text-white'
                     : 'bg-white hover:bg-gray-50 border border-gray-200'
@@ -221,7 +221,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Écrivez votre commentaire ici..."
-            className="w-full h-24 p-4 border border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+            className="w-full h-24 p-4 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
           />
         </div>
 
@@ -231,7 +231,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
           <p className="text-gray-600 text-sm mb-4">Ajouter une photo depuis ma galerie</p>
           
           <div className="flex space-x-4">
-            <label className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+            <label className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
               <Camera size={24} className="text-gray-400" />
               <input
                 type="file"
@@ -242,7 +242,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
             </label>
             
             {selectedPhoto && (
-              <div className="w-16 h-16 rounded-xl overflow-hidden relative">
+              <div className="w-16 h-16 rounded-2xl overflow-hidden relative">
                 <img
                   src={selectedPhoto}
                   alt="Selected"

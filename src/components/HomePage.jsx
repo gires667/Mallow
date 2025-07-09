@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Heart, Share2, Bookmark, MapPin, Clock, Star, Search, Filter, User, Calendar, Home, Compass } from 'lucide-react';
 import PostDetail from './PostDetail';
@@ -5,6 +6,7 @@ import BookingFlow from './BookingFlow';
 import AppointmentsList from './AppointmentsList';
 import ProfileView from './ProfileView';
 import InstituteDetail from './InstituteDetail';
+import SearchFeed from './SearchFeed';
 
 const HomePage = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('home');
@@ -219,6 +221,10 @@ const HomePage = ({ onLogout }) => {
     return <ProfileView onBack={handleBackToHome} onLogout={onLogout} />;
   }
 
+  if (currentView === 'search') {
+    return <SearchFeed onBack={handleBackToHome} posts={posts} onPostClick={handlePostClick} onInstituteClick={handleInstituteClick} />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -250,8 +256,8 @@ const HomePage = ({ onLogout }) => {
         </div>
       </header>
 
-      {/* Search Bar for explore tab */}
-      {activeTab === 'explore' && (
+      {/* Search Bar for search tab */}
+      {activeTab === 'search' && (
         <div className="bg-white border-b border-gray-100 px-4 py-3">
           <div className="max-w-md mx-auto flex space-x-2">
             <div className="flex-1 relative">
@@ -369,7 +375,7 @@ const HomePage = ({ onLogout }) => {
           </div>
         )}
 
-        {activeTab === 'explore' && (
+        {activeTab === 'search' && (
           <div className="p-4 space-y-6">
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">Instituts près de chez vous</h2>
@@ -417,7 +423,10 @@ const HomePage = ({ onLogout }) => {
                 <h3 className="font-semibold text-gray-800 mb-2">Aucun rendez-vous prévu</h3>
                 <p className="text-gray-600 text-sm mb-4">Découvrez nos instituts partenaires et réservez votre première prestation</p>
                 <button
-                  onClick={() => setActiveTab('explore')}
+                  onClick={() => {
+                    setActiveTab('search');
+                    setCurrentView('search');
+                  }}
                   className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full font-semibold hover:from-pink-600 hover:to-rose-600 transition-all"
                 >
                   Explorer
@@ -486,11 +495,11 @@ const HomePage = ({ onLogout }) => {
           </button>
           <button
             onClick={() => {
-              setActiveTab('explore');
-              setCurrentView('home');
+              setActiveTab('search');
+              setCurrentView('search');
             }}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
-              activeTab === 'explore' ? 'text-gray-900' : 'text-gray-400'
+              activeTab === 'search' ? 'text-gray-900' : 'text-gray-400'
             }`}
           >
             <Search size={20} />
@@ -499,7 +508,7 @@ const HomePage = ({ onLogout }) => {
           <button
             onClick={() => {
               setActiveTab('appointments');
-              setCurrentView('home');
+              setCurrentView('appointments');
             }}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
               activeTab === 'appointments' ? 'text-gray-900' : 'text-gray-400'
@@ -511,7 +520,7 @@ const HomePage = ({ onLogout }) => {
           <button
             onClick={() => {
               setActiveTab('profile');
-              setCurrentView('home');
+              setCurrentView('profile');
             }}
             className={`flex flex-col items-center space-y-1 py-2 px-3 ${
               activeTab === 'profile' ? 'text-gray-900' : 'text-gray-400'
