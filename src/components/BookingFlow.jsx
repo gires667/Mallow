@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, Camera, Check, Plus } from 'lucide-react';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppointments }) => {
   const [selectedSpecialist, setSelectedSpecialist] = useState('');
@@ -19,7 +19,9 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
     { id: 5, name: 'Marie', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face' },
     { id: 6, name: 'Alex', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=face' },
     { id: 7, name: 'Sophie', image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=80&h=80&fit=crop&crop=face' },
-    { id: 8, name: 'Lucas', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face' }
+    { id: 8, name: 'Lucas', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face' },
+    { id: 9, name: 'Emma', image: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=80&h=80&fit=crop&crop=face' },
+    { id: 10, name: 'Thomas', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face' }
   ];
 
   const dates = [
@@ -34,14 +36,15 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
     { date: '24', day: 'Lun', available: true },
     { date: '25', day: 'Mar', available: true },
     { date: '26', day: 'Mer', available: true },
-    { date: '27', day: 'Jeu', available: true }
+    { date: '27', day: 'Jeu', available: true },
+    { date: '28', day: 'Ven', available: true }
   ];
 
   const timeSlots = [
     '9:00', '9:30', '10:00', '10:30', '11:00', '11:30',
     '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
     '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
-    '20:00', '20:30'
+    '20:00', '20:30', '21:00', '21:30'
   ];
 
   const handlePhotoUpload = (event) => {
@@ -150,102 +153,120 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
           <button className="text-gray-500 text-sm mt-2">Ajouter une prestation</button>
         </div>
 
-        {/* 2. Sélectionner votre spécialiste - CAROUSEL SWIPE */}
+        {/* 2. Sélectionner votre spécialiste - CAROUSEL SWIPE AMÉLIORÉ */}
         <div>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">2. Sélectionnez votre spécialiste</h2>
-          <Carousel
-            opts={{
-              align: "start",
-              dragFree: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {specialists.map((specialist) => (
-                <CarouselItem key={specialist.id} className="pl-2 md:pl-4 basis-auto">
-                  <button
-                    onClick={() => setSelectedSpecialist(specialist.name)}
-                    className={`flex flex-col items-center space-y-2 p-3 rounded-2xl transition-colors min-w-[80px] ${
-                      selectedSpecialist === specialist.name
-                        ? 'bg-pink-50 border-2 border-pink-500'
-                        : 'hover:bg-gray-50 border-2 border-transparent bg-white'
-                    }`}
-                  >
-                    <div className="w-14 h-14 rounded-full overflow-hidden">
-                      <img
-                        src={specialist.image}
-                        alt={specialist.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-gray-900">{specialist.name}</span>
-                  </button>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <div className="relative">
+            <Carousel
+              opts={{
+                align: "start",
+                dragFree: true,
+                containScroll: "trimSnaps",
+                slidesToScroll: 1,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2">
+                {specialists.map((specialist) => (
+                  <CarouselItem key={specialist.id} className="pl-2 basis-auto">
+                    <button
+                      onClick={() => setSelectedSpecialist(specialist.name)}
+                      className={`flex flex-col items-center space-y-2 p-3 rounded-2xl transition-all duration-200 min-w-[80px] ${
+                        selectedSpecialist === specialist.name
+                          ? 'bg-pink-50 border-2 border-pink-500 shadow-md transform scale-105'
+                          : 'hover:bg-gray-50 border-2 border-transparent bg-white hover:shadow-sm'
+                      }`}
+                    >
+                      <div className="w-14 h-14 rounded-full overflow-hidden">
+                        <img
+                          src={specialist.image}
+                          alt={specialist.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">{specialist.name}</span>
+                    </button>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden md:flex -left-4" />
+              <CarouselNext className="hidden md:flex -right-4" />
+            </Carousel>
+          </div>
         </div>
 
-        {/* 3. Sélectionner une date - CAROUSEL SWIPE */}
+        {/* 3. Sélectionner une date - CAROUSEL SWIPE AMÉLIORÉ */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900">3. Sélectionner une date</h2>
             <button className="text-gray-500 text-sm">Février ▼</button>
           </div>
-          <Carousel
-            opts={{
-              align: "start",
-              dragFree: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {dates.map((dateOption, index) => (
-                <CarouselItem key={index} className="pl-2 md:pl-4 basis-auto">
-                  <button
-                    onClick={() => setSelectedDate(dateOption.date)}
-                    className={`flex flex-col items-center p-3 rounded-2xl transition-colors min-w-[60px] ${
-                      selectedDate === dateOption.date
-                        ? 'bg-slate-800 text-white'
-                        : 'bg-white hover:bg-gray-50 border border-gray-200'
-                    }`}
-                  >
-                    <span className="text-xs mb-1">{dateOption.day}</span>
-                    <span className="text-lg font-semibold">{dateOption.date}</span>
-                  </button>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <div className="relative">
+            <Carousel
+              opts={{
+                align: "start",
+                dragFree: true,
+                containScroll: "trimSnaps",
+                slidesToScroll: 1,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2">
+                {dates.map((dateOption, index) => (
+                  <CarouselItem key={index} className="pl-2 basis-auto">
+                    <button
+                      onClick={() => setSelectedDate(dateOption.date)}
+                      className={`flex flex-col items-center p-3 rounded-2xl transition-all duration-200 min-w-[60px] ${
+                        selectedDate === dateOption.date
+                          ? 'bg-slate-800 text-white shadow-md transform scale-105'
+                          : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
+                      }`}
+                    >
+                      <span className="text-xs mb-1">{dateOption.day}</span>
+                      <span className="text-lg font-semibold">{dateOption.date}</span>
+                    </button>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden md:flex -left-4" />
+              <CarouselNext className="hidden md:flex -right-4" />
+            </Carousel>
+          </div>
         </div>
 
-        {/* 4. Sélectionner un horaire - CAROUSEL SWIPE */}
+        {/* 4. Sélectionner un horaire - CAROUSEL SWIPE AMÉLIORÉ */}
         <div>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">4. Sélectionner un horaire</h2>
-          <Carousel
-            opts={{
-              align: "start",
-              dragFree: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {timeSlots.map((time) => (
-                <CarouselItem key={time} className="pl-2 md:pl-4 basis-auto">
-                  <button
-                    onClick={() => setSelectedTime(time)}
-                    className={`px-4 py-2 rounded-2xl transition-colors min-w-[70px] ${
-                      selectedTime === time
-                        ? 'bg-slate-800 text-white'
-                        : 'bg-white hover:bg-gray-50 border border-gray-200'
-                    }`}
-                  >
-                    <span className="text-sm font-medium">{time}</span>
-                  </button>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <div className="relative">
+            <Carousel
+              opts={{
+                align: "start",
+                dragFree: true,
+                containScroll: "trimSnaps",
+                slidesToScroll: 1,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2">
+                {timeSlots.map((time) => (
+                  <CarouselItem key={time} className="pl-2 basis-auto">
+                    <button
+                      onClick={() => setSelectedTime(time)}
+                      className={`px-4 py-2 rounded-2xl transition-all duration-200 min-w-[70px] ${
+                        selectedTime === time
+                          ? 'bg-slate-800 text-white shadow-md transform scale-105'
+                          : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
+                      }`}
+                    >
+                      <span className="text-sm font-medium">{time}</span>
+                    </button>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden md:flex -left-4" />
+              <CarouselNext className="hidden md:flex -right-4" />
+            </Carousel>
+          </div>
         </div>
 
         {/* 5. Ajouter un commentaire */}
