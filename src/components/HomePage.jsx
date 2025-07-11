@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Heart, Share2, Bookmark, MapPin, Clock, Star, Search, Filter, User, Calendar, Home, Compass } from 'lucide-react';
 import PostDetail from './PostDetail';
@@ -308,7 +309,6 @@ const HomePage = ({ onLogout }) => {
           </div>
         )}
 
-        
         {activeTab === 'search' && (
           <div className="p-4 space-y-6">
             <div>
@@ -468,111 +468,5 @@ const HomePage = ({ onLogout }) => {
     </div>
   );
 };
-
-// Ajouter tous les handlers manquants
-const toggleLike = (postId) => {
-  const newLikedPosts = new Set(likedPosts);
-  if (newLikedPosts.has(postId)) {
-    newLikedPosts.delete(postId);
-  } else {
-    newLikedPosts.add(postId);
-  }
-  setLikedPosts(newLikedPosts);
-};
-
-const toggleSave = (postId) => {
-  const newSavedPosts = new Set(savedPosts);
-  if (newSavedPosts.has(postId)) {
-    newSavedPosts.delete(postId);
-  } else {
-    newSavedPosts.add(postId);
-  }
-  setSavedPosts(newSavedPosts);
-};
-
-const handlePostClick = (post) => {
-  setSelectedPost(post);
-  setCurrentView('postDetail');
-};
-
-const handleInstituteClick = (post) => {
-  setSelectedInstitute(post);
-  setCurrentView('instituteDetail');
-};
-
-const handleBookAppointment = (post, prestation) => {
-  setSelectedPost(post);
-  setPrestationDetails(prestation);
-  setCurrentView('booking');
-};
-
-const handleBookingConfirm = () => {
-  setCurrentView('home');
-  setActiveTab('home');
-};
-
-const handleBackToHome = () => {
-  setCurrentView('home');
-  setActiveTab('home');
-  setSelectedPost(null);
-  setSelectedInstitute(null);
-  setPrestationDetails(null);
-};
-
-const handleViewAppointments = () => {
-  setActiveTab('appointments');
-  setCurrentView('appointments');
-};
-
-const handleViewProfile = () => {
-  setActiveTab('profile');
-  setCurrentView('profile');
-};
-
-// Render different views
-if (currentView === 'postDetail') {
-  return (
-    <PostDetail 
-      post={selectedPost}
-      onBack={handleBackToHome}
-      onBookAppointment={handleBookAppointment}
-      onInstituteClick={handleInstituteClick}
-    />
-  );
-}
-
-if (currentView === 'instituteDetail') {
-  return (
-    <InstituteDetail 
-      institute={selectedInstitute}
-      onBack={handleBackToHome}
-      onBookService={handleBookAppointment}
-    />
-  );
-}
-
-if (currentView === 'booking') {
-  return (
-    <BookingFlow 
-      post={selectedPost}
-      prestationDetails={prestationDetails}
-      onBack={() => setCurrentView(selectedInstitute ? 'instituteDetail' : 'postDetail')}
-      onConfirm={handleBookingConfirm}
-      onViewAppointments={handleViewAppointments}
-    />
-  );
-}
-
-if (currentView === 'appointments') {
-  return <AppointmentsList onBack={handleBackToHome} onLogout={onLogout} onBookNew={handleBookAppointment} posts={posts} />;
-}
-
-if (currentView === 'profile') {
-  return <ProfileView onBack={handleBackToHome} onLogout={onLogout} />;
-}
-
-if (currentView === 'search') {
-  return <SearchFeed onBack={handleBackToHome} posts={posts} onPostClick={handlePostClick} onInstituteClick={handleInstituteClick} />;
-}
 
 export default HomePage;
