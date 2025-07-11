@@ -1,11 +1,13 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Search, Filter, MapPin, Star, Heart, Bookmark, User } from 'lucide-react';
+import FilterModal from './FilterModal';
 
 const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [savedPosts, setSavedPosts] = useState(new Set());
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({});
 
   const trendingColors = [
     { name: 'Rose Gold', color: '#F7B2BD', count: '2.4k' },
@@ -37,6 +39,18 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
       newSavedPosts.add(postId);
     }
     setSavedPosts(newSavedPosts);
+  };
+
+  const handleApplyFilters = (filters) => {
+    setActiveFilters(filters);
+    console.log('Filtres appliqués:', filters);
+    // Ici vous pouvez implémenter la logique de filtrage
+  };
+
+  const getActiveFilterCount = () => {
+    return Object.values(activeFilters).reduce((count, filterArray) => {
+      return count + (Array.isArray(filterArray) ? filterArray.length : 0);
+    }, 0);
   };
 
   const filteredPosts = posts.filter(post => 
@@ -71,10 +85,48 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
               className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
           </div>
-          <button className="p-2 bg-pink-500 text-white rounded-2xl hover:bg-pink-600 transition-colors">
+          <button 
+            onClick={() => setShowFilterModal(true)}
+            className="relative p-2 bg-pink-500 text-white rounded-2xl hover:bg-pink-600 transition-colors"
+          >
             <Filter size={18} />
+            {getActiveFilterCount() > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {getActiveFilterCount()}
+              </span>
+            )}
           </button>
         </div>
+
+        {/* Filtres actifs */}
+        {getActiveFilterCount() > 0 && (
+          <div className="max-w-md mx-auto mt-3">
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(activeFilters).map(([category, values]) => 
+                Array.isArray(values) && values.length > 0 ? (
+                  values.map(value => (
+                    <span
+                      key={`${category}-${value}`}
+                      className="inline-flex items-center px-2 py-1 bg-pink-100 text-pink-800 text-xs rounded-full"
+                    >
+                      {value}
+                      <button
+                        onClick={() => {
+                          const newFilters = { ...activeFilters };
+                          newFilters[category] = newFilters[category].filter(v => v !== value);
+                          setActiveFilters(newFilters);
+                        }}
+                        className="ml-1 hover:text-pink-600"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))
+                ) : null
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -275,6 +327,14 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
           </div>
         )}
       </main>
+
+      {/* Filter Modal */}
+      <FilterModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        onApplyFilters={handleApplyFilters}
+        context="search"
+      />
     </div>
   );
 };

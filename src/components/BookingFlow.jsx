@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Calendar, Camera, Check, Plus } from 'lucide-react';
+import { ArrowLeft, Calendar, Camera, Check, Plus, Filter } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import FilterModal from './FilterModal';
 
 const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppointments }) => {
   const [selectedSpecialist, setSelectedSpecialist] = useState('');
@@ -10,6 +10,9 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
   const [comment, setComment] = useState('');
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState({});
+  const [showTechniqueSelection, setShowTechniqueSelection] = useState(false);
 
   const specialists = [
     { id: 1, name: 'Lily', image: 'https://images.unsplash.com/photo-1494790108755-2616c78e8e7b?w=80&h=80&fit=crop&crop=face' },
@@ -64,6 +67,13 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
 
   const handleConsultFeed = () => {
     onConfirm();
+  };
+
+  const handleFilterApply = (filters) => {
+    setSelectedFilters(filters);
+    if (filters.technique && filters.technique.length > 0) {
+      setShowTechniqueSelection(true);
+    }
   };
 
   if (showConfirmation) {
@@ -131,216 +141,291 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
 
       {/* Content */}
       <div className="max-w-md mx-auto p-4 space-y-8">
-        {/* 1. Prestation sélectionnée */}
+        {/* 1. Prestation sélectionnée avec choix de technique */}
         <div>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">1. Prestation sélectionnée</h2>
-          <div className="bg-pink-50 border border-pink-200 rounded-2xl p-4 relative">
-            <div className="absolute top-3 right-3 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
-              <Check size={14} className="text-white" />
+          
+          {!showTechniqueSelection ? (
+            <div>
+              <div className="bg-pink-50 border border-pink-200 rounded-2xl p-4 relative">
+                <div className="absolute top-3 right-3 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
+                  <Check size={14} className="text-white" />
+                </div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
+                  <span className="text-gray-600 text-sm">1h00</span>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Pose + pose de vernis semi<br />permanent mains
+                </h3>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500 text-sm">À partir de</span>
+                  <span className="text-xl font-bold text-gray-900">20 €</span>
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => setShowFilterModal(true)}
+                className="flex items-center space-x-2 text-pink-600 text-sm mt-3 hover:text-pink-700 transition-colors"
+              >
+                <Filter size={16} />
+                <span>Choisir la technique et les détails</span>
+              </button>
             </div>
-            <div className="flex items-center space-x-2 mb-2">
-              <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
-              <span className="text-gray-600 text-sm">1h00</span>
+          ) : (
+            <div className="space-y-3">
+              <div className="bg-pink-50 border border-pink-200 rounded-2xl p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
+                  <span className="text-gray-600 text-sm">Technique sélectionnée</span>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  {selectedFilters.technique && selectedFilters.technique[0]}
+                </h3>
+                
+                {/* Affichage des autres filtres sélectionnés */}
+                <div className="space-y-2 text-sm">
+                  {selectedFilters.type && selectedFilters.type.length > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">Type:</span>
+                      <span className="text-gray-800">{selectedFilters.type.join(', ')}</span>
+                    </div>
+                  )}
+                  {selectedFilters.couleur && selectedFilters.couleur.length > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-600">Couleurs:</span>
+                      <div className="flex space-x-1">
+                        {selectedFilters.couleur.slice(0, 3).map(color => (
+                          <span key={color} className="px-2 py-1 bg-gray-100 rounded-full text-xs">
+                            {color}
+                          </span>
+                        ))}
+                        {selectedFilters.couleur.length > 3 && (
+                          <span className="text-gray-500 text-xs">+{selectedFilters.couleur.length - 3}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex justify-between items-center mt-3">
+                  <span className="text-gray-500 text-sm">À partir de</span>
+                  <span className="text-xl font-bold text-gray-900">25 €</span>
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => setShowFilterModal(true)}
+                className="text-pink-600 text-sm hover:text-pink-700 transition-colors"
+              >
+                Modifier les détails
+              </button>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-1">
-              Pose + pose de vernis semi<br />permanent mains
-            </h3>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-500 text-sm">À partir de</span>
-              <span className="text-xl font-bold text-gray-900">20 €</span>
-            </div>
-          </div>
+          )}
+          
           <button className="text-gray-500 text-sm mt-2">Ajouter une prestation</button>
         </div>
 
         {/* 2. Sélectionner votre spécialiste - CAROUSEL SWIPE AMÉLIORÉ */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">2. Sélectionnez votre spécialiste</h2>
-          <div className="relative">
-            <Carousel
-              opts={{
-                align: "start",
-                dragFree: true,
-                containScroll: "trimSnaps",
-                slidesToScroll: 1,
-              }}
-              className="w-full"
-            >
-              <CarouselContent className="-ml-2">
-                {specialists.map((specialist) => (
-                  <CarouselItem key={specialist.id} className="pl-2 basis-auto">
-                    <button
-                      onClick={() => setSelectedSpecialist(specialist.name)}
-                      className={`flex flex-col items-center space-y-2 p-3 rounded-2xl transition-all duration-200 min-w-[80px] ${
-                        selectedSpecialist === specialist.name
-                          ? 'bg-pink-50 border-2 border-pink-500 shadow-md transform scale-105'
-                          : 'hover:bg-gray-50 border-2 border-transparent bg-white hover:shadow-sm'
-                      }`}
-                    >
-                      <div className="w-14 h-14 rounded-full overflow-hidden">
-                        <img
-                          src={specialist.image}
-                          alt={specialist.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <span className="text-sm font-medium text-gray-900">{specialist.name}</span>
-                    </button>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden md:flex -left-4" />
-              <CarouselNext className="hidden md:flex -right-4" />
-            </Carousel>
-          </div>
-        </div>
-
-        {/* 3. Sélectionner une date - CAROUSEL SWIPE AMÉLIORÉ */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">3. Sélectionner une date</h2>
-            <button className="text-gray-500 text-sm">Février ▼</button>
-          </div>
-          <div className="relative">
-            <Carousel
-              opts={{
-                align: "start",
-                dragFree: true,
-                containScroll: "trimSnaps",
-                slidesToScroll: 1,
-              }}
-              className="w-full"
-            >
-              <CarouselContent className="-ml-2">
-                {dates.map((dateOption, index) => (
-                  <CarouselItem key={index} className="pl-2 basis-auto">
-                    <button
-                      onClick={() => setSelectedDate(dateOption.date)}
-                      className={`flex flex-col items-center p-3 rounded-2xl transition-all duration-200 min-w-[60px] ${
-                        selectedDate === dateOption.date
-                          ? 'bg-slate-800 text-white shadow-md transform scale-105'
-                          : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
-                      }`}
-                    >
-                      <span className="text-xs mb-1">{dateOption.day}</span>
-                      <span className="text-lg font-semibold">{dateOption.date}</span>
-                    </button>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden md:flex -left-4" />
-              <CarouselNext className="hidden md:flex -right-4" />
-            </Carousel>
-          </div>
-        </div>
-
-        {/* 4. Sélectionner un horaire - CAROUSEL SWIPE AMÉLIORÉ */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">4. Sélectionner un horaire</h2>
-          <div className="relative">
-            <Carousel
-              opts={{
-                align: "start",
-                dragFree: true,
-                containScroll: "trimSnaps",
-                slidesToScroll: 1,
-              }}
-              className="w-full"
-            >
-              <CarouselContent className="-ml-2">
-                {timeSlots.map((time) => (
-                  <CarouselItem key={time} className="pl-2 basis-auto">
-                    <button
-                      onClick={() => setSelectedTime(time)}
-                      className={`px-4 py-2 rounded-2xl transition-all duration-200 min-w-[70px] ${
-                        selectedTime === time
-                          ? 'bg-slate-800 text-white shadow-md transform scale-105'
-                          : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
-                      }`}
-                    >
-                      <span className="text-sm font-medium">{time}</span>
-                    </button>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden md:flex -left-4" />
-              <CarouselNext className="hidden md:flex -right-4" />
-            </Carousel>
-          </div>
-        </div>
-
-        {/* 5. Ajouter un commentaire */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">5. Ajouter un commentaire</h2>
-          <textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Écrivez votre commentaire ici..."
-            className="w-full h-24 p-4 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-          />
-        </div>
-
-        {/* 6. Illustrer avec une photo */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">6. Illustrer avec une photo</h2>
-          <p className="text-gray-600 text-sm mb-4">Ajouter une photo depuis ma galerie</p>
-          
-          <div className="flex space-x-4">
-            <label className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
-              <Camera size={24} className="text-gray-400" />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                className="hidden"
-              />
-            </label>
-            
-            {selectedPhoto && (
-              <div className="w-16 h-16 rounded-2xl overflow-hidden relative">
-                <img
-                  src={selectedPhoto}
-                  alt="Selected"
-                  className="w-full h-full object-cover"
-                />
-                <button 
-                  onClick={() => setSelectedPhoto(null)}
-                  className="absolute top-1 right-1 w-5 h-5 bg-slate-800 rounded-full flex items-center justify-center"
+        {showTechniqueSelection && (
+          <>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">2. Sélectionnez votre spécialiste</h2>
+              <div className="relative">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    dragFree: true,
+                    containScroll: "trimSnaps",
+                    slidesToScroll: 1,
+                  }}
+                  className="w-full"
                 >
-                  <span className="text-white text-xs">✕</span>
-                </button>
+                  <CarouselContent className="-ml-2">
+                    {specialists.map((specialist) => (
+                      <CarouselItem key={specialist.id} className="pl-2 basis-auto">
+                        <button
+                          onClick={() => setSelectedSpecialist(specialist.name)}
+                          className={`flex flex-col items-center space-y-2 p-3 rounded-2xl transition-all duration-200 min-w-[80px] ${
+                            selectedSpecialist === specialist.name
+                              ? 'bg-pink-50 border-2 border-pink-500 shadow-md transform scale-105'
+                              : 'hover:bg-gray-50 border-2 border-transparent bg-white hover:shadow-sm'
+                          }`}
+                        >
+                          <div className="w-14 h-14 rounded-full overflow-hidden">
+                            <img
+                              src={specialist.image}
+                              alt={specialist.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <span className="text-sm font-medium text-gray-900">{specialist.name}</span>
+                        </button>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="hidden md:flex -left-4" />
+                  <CarouselNext className="hidden md:flex -right-4" />
+                </Carousel>
               </div>
-            )}
-          </div>
-          
-          <p className="text-gray-600 text-sm mt-4">Ajouter un post enregistré</p>
-        </div>
-
-        {/* Date et heure récap + Confirmer - DYNAMIC UPDATE */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-gray-600">Date :</span>
-            <span className="font-semibold text-gray-900">{selectedDate} février</span>
-          </div>
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-gray-600">Horaire :</span>
-            <span className="font-semibold text-gray-900">{selectedTime}</span>
-          </div>
-          {selectedSpecialist && (
-            <div className="flex justify-between items-center mb-6">
-              <span className="text-gray-600">Spécialiste :</span>
-              <span className="font-semibold text-gray-900">{selectedSpecialist}</span>
             </div>
-          )}
-          
-          <button
-            onClick={handleConfirm}
-            className="w-full bg-slate-800 text-white py-4 rounded-2xl font-semibold hover:bg-slate-900 transition-colors"
-          >
-            CONFIRMER
-          </button>
-        </div>
+
+            {/* 3. Sélectionner une date - CAROUSEL SWIPE AMÉLIORÉ */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-gray-900">3. Sélectionner une date</h2>
+                <button className="text-gray-500 text-sm">Février ▼</button>
+              </div>
+              <div className="relative">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    dragFree: true,
+                    containScroll: "trimSnaps",
+                    slidesToScroll: 1,
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2">
+                    {dates.map((dateOption, index) => (
+                      <CarouselItem key={index} className="pl-2 basis-auto">
+                        <button
+                          onClick={() => setSelectedDate(dateOption.date)}
+                          className={`flex flex-col items-center p-3 rounded-2xl transition-all duration-200 min-w-[60px] ${
+                            selectedDate === dateOption.date
+                              ? 'bg-slate-800 text-white shadow-md transform scale-105'
+                              : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
+                          }`}
+                        >
+                          <span className="text-xs mb-1">{dateOption.day}</span>
+                          <span className="text-lg font-semibold">{dateOption.date}</span>
+                        </button>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="hidden md:flex -left-4" />
+                  <CarouselNext className="hidden md:flex -right-4" />
+                </Carousel>
+              </div>
+            </div>
+
+            {/* 4. Sélectionner un horaire - CAROUSEL SWIPE AMÉLIORÉ */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">4. Sélectionner un horaire</h2>
+              <div className="relative">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    dragFree: true,
+                    containScroll: "trimSnaps",
+                    slidesToScroll: 1,
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2">
+                    {timeSlots.map((time) => (
+                      <CarouselItem key={time} className="pl-2 basis-auto">
+                        <button
+                          onClick={() => setSelectedTime(time)}
+                          className={`px-4 py-2 rounded-2xl transition-all duration-200 min-w-[70px] ${
+                            selectedTime === time
+                              ? 'bg-slate-800 text-white shadow-md transform scale-105'
+                              : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
+                          }`}
+                        >
+                          <span className="text-sm font-medium">{time}</span>
+                        </button>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="hidden md:flex -left-4" />
+                  <CarouselNext className="hidden md:flex -right-4" />
+                </Carousel>
+              </div>
+            </div>
+
+            {/* 5. Ajouter un commentaire */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">5. Ajouter un commentaire</h2>
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Écrivez votre commentaire ici..."
+                className="w-full h-24 p-4 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* 6. Illustrer avec une photo */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">6. Illustrer avec une photo</h2>
+              <p className="text-gray-600 text-sm mb-4">Ajouter une photo depuis ma galerie</p>
+              
+              <div className="flex space-x-4">
+                <label className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+                  <Camera size={24} className="text-gray-400" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
+                </label>
+                
+                {selectedPhoto && (
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden relative">
+                    <img
+                      src={selectedPhoto}
+                      alt="Selected"
+                      className="w-full h-full object-cover"
+                    />
+                    <button 
+                      onClick={() => setSelectedPhoto(null)}
+                      className="absolute top-1 right-1 w-5 h-5 bg-slate-800 rounded-full flex items-center justify-center"
+                    >
+                      <span className="text-white text-xs">✕</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              <p className="text-gray-600 text-sm mt-4">Ajouter un post enregistré</p>
+            </div>
+
+            {/* Date et heure récap + Confirmer - DYNAMIC UPDATE */}
+            <div className="bg-white rounded-2xl p-4 border border-gray-100">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-gray-600">Date :</span>
+                <span className="font-semibold text-gray-900">{selectedDate} février</span>
+              </div>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-gray-600">Horaire :</span>
+                <span className="font-semibold text-gray-900">{selectedTime}</span>
+              </div>
+              {selectedSpecialist && (
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-gray-600">Spécialiste :</span>
+                  <span className="font-semibold text-gray-900">{selectedSpecialist}</span>
+                </div>
+              )}
+              
+              <button
+                onClick={handleConfirm}
+                className="w-full bg-slate-800 text-white py-4 rounded-2xl font-semibold hover:bg-slate-900 transition-colors"
+              >
+                CONFIRMER
+              </button>
+            </div>
+          </>
+        )}
       </div>
+
+      {/* Filter Modal */}
+      <FilterModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        onApplyFilters={handleFilterApply}
+        context="booking"
+      />
     </div>
   );
 };
