@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
-import { X, Check } from 'lucide-react';
+import { X, Check, Minus, Plus } from 'lucide-react';
 
 const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) => {
-  // Context peut être 'search', 'booking', 'prestation_add', 'publication_add'
-  
   const [filters, setFilters] = useState({
+    distance: 15,
+    price: [0, 100],
+    note: 0,
     technique: [],
     type: [],
     taille: [],
@@ -62,57 +63,33 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
     ]
   };
 
-  // Règles selon le contexte
-  const getFilterRules = (filterType) => {
-    const rules = {
-      search: { // Tous facultatifs et multiples
-        technique: { required: false, multiple: true },
-        type: { required: false, multiple: true },
-        taille: { required: false, multiple: true },
-        couleur: { required: false, multiple: true },
-        forme: { required: false, multiple: true },
-        finitionCouleur: { required: false, multiple: true },
-        supplement: { required: false, multiple: true },
-        styleTheme: { required: false, multiple: true }
-      },
-      booking: { // Technique obligatoire unique au premier lieu
-        technique: { required: true, multiple: false },
-        type: { required: false, multiple: true },
-        taille: { required: false, multiple: true },
-        couleur: { required: false, multiple: true },
-        forme: { required: false, multiple: true },
-        finitionCouleur: { required: false, multiple: true },
-        supplement: { required: false, multiple: true },
-        styleTheme: { required: false, multiple: true }
-      }
-    };
-    
-    return rules[context] || rules.search;
-  };
-
   const handleFilterChange = (category, value) => {
-    const rules = getFilterRules();
-    const isMultiple = rules[category]?.multiple;
-
     setFilters(prev => {
-      if (isMultiple) {
-        const currentValues = prev[category] || [];
-        const newValues = currentValues.includes(value)
-          ? currentValues.filter(v => v !== value)
-          : [...currentValues, value];
-        return { ...prev, [category]: newValues };
-      } else {
-        return { ...prev, [category]: [value] };
+      if (category === 'distance' || category === 'note') {
+        return { ...prev, [category]: value };
       }
+      
+      if (category === 'price') {
+        return { ...prev, [category]: value };
+      }
+
+      const currentValues = prev[category] || [];
+      const newValues = currentValues.includes(value)
+        ? currentValues.filter(v => v !== value)
+        : [...currentValues, value];
+      return { ...prev, [category]: newValues };
     });
   };
 
   const isSelected = (category, value) => {
-    return filters[category]?.includes(value) || false;
+    return filters[category]?.includes && filters[category].includes(value);
   };
 
   const clearFilters = () => {
     setFilters({
+      distance: 15,
+      price: [0, 100],
+      note: 0,
       technique: [],
       type: [],
       taille: [],
@@ -149,7 +126,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
       <button
         key={color}
         onClick={() => handleFilterChange('couleur', color)}
-        className={`flex items-center space-x-2 p-2 rounded-lg border transition-all ${
+        className={`flex items-center space-x-2 p-3 rounded-xl border transition-all ${
           isSelected('couleur', color)
             ? 'bg-pink-50 border-pink-500'
             : 'hover:bg-gray-50 border-gray-200'
@@ -159,85 +136,11 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
           className="w-6 h-6 rounded-full border-2 border-gray-300"
           style={{ backgroundColor: colorMap[color] }}
         ></div>
-        <span className="text-sm">{color}</span>
+        <span className="text-sm font-medium">{color}</span>
         {isSelected('couleur', color) && (
-          <Check size={16} className="text-pink-500" />
+          <Check size={16} className="text-pink-500 ml-auto" />
         )}
       </button>
-    );
-  };
-
-  const renderFilterSection = (title, category, options) => {
-    const rules = getFilterRules();
-    const isRequired = rules[category]?.required;
-    const isMultiple = rules[category]?.multiple;
-
-    return (
-      <div className="mb-6">
-        <div className="flex items-center space-x-2 mb-3">
-          <h3 className="font-semibold text-gray-800">{title}</h3>
-          {isRequired && <span className="text-red-500 text-xs">*</span>}
-          <span className="text-xs text-gray-500">
-            ({isMultiple ? 'choix multiples' : 'choix unique'})
-          </span>
-        </div>
-        
-        {category === 'couleur' ? (
-          <div className="grid grid-cols-2 gap-2">
-            {options.map(renderColorOption)}
-          </div>
-        ) : typeof options === 'object' && !Array.isArray(options) ? (
-          <div className="space-y-4">
-            {Object.entries(options).map(([subCategory, subOptions]) => (
-              <div key={subCategory}>
-                <h4 className="text-sm font-medium text-gray-600 mb-2">{subCategory}</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {subOptions.map(option => (
-                    <button
-                      key={option}
-                      onClick={() => handleFilterChange(category, option)}
-                      className={`p-2 text-sm rounded-lg border text-left transition-all ${
-                        isSelected(category, option)
-                          ? 'bg-pink-50 border-pink-500 text-pink-700'
-                          : 'hover:bg-gray-50 border-gray-200'
-                      }`}
-                    >
-                      {option}
-                      {isSelected(category, option) && (
-                        <Check size={14} className="float-right text-pink-500" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-2">
-            {options.map(option => {
-              const value = typeof option === 'object' ? option.value : option;
-              const label = typeof option === 'object' ? option.label : option;
-              
-              return (
-                <button
-                  key={value}
-                  onClick={() => handleFilterChange(category, value)}
-                  className={`p-2 text-sm rounded-lg border text-left transition-all ${
-                    isSelected(category, value)
-                      ? 'bg-pink-50 border-pink-500 text-pink-700'
-                      : 'hover:bg-gray-50 border-gray-200'
-                  }`}
-                >
-                  {label}
-                  {isSelected(category, value) && (
-                    <Check size={14} className="float-right text-pink-500" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
     );
   };
 
@@ -245,48 +148,143 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center justify-center">
-      <div className="bg-white w-full max-w-2xl max-h-[90vh] rounded-t-3xl md:rounded-3xl overflow-hidden">
+      <div className="bg-white w-full max-w-lg max-h-[90vh] rounded-t-3xl md:rounded-3xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">Filtres</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+          <h2 className="text-xl font-bold text-gray-900">Filtres</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
-            <X size={20} className="text-gray-600" />
+            <X size={24} className="text-gray-600" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-4 overflow-y-auto max-h-[calc(90vh-140px)]">
-          {context === 'booking' && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-              <p className="text-sm text-blue-800">
-                <strong>Étape 1 :</strong> Sélectionnez d'abord votre technique (obligatoire)
-              </p>
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)] space-y-6">
+          {/* Distance */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-gray-800">Distance</h3>
+              <span className="text-sm text-gray-600">{filters.distance} km</span>
             </div>
-          )}
+            <div className="relative">
+              <input
+                type="range"
+                min="1"
+                max="50"
+                value={filters.distance}
+                onChange={(e) => handleFilterChange('distance', parseInt(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              />
+            </div>
+          </div>
 
-          {renderFilterSection('Technique', 'technique', filterOptions.technique)}
-          {renderFilterSection('Type', 'type', filterOptions.type)}
-          {renderFilterSection('Taille', 'taille', filterOptions.taille)}
-          {renderFilterSection('Couleur', 'couleur', filterOptions.couleur)}
-          {renderFilterSection('Forme', 'forme', filterOptions.forme)}
-          {renderFilterSection('Finition couleur', 'finitionCouleur', filterOptions.finitionCouleur)}
-          {renderFilterSection('Supplément', 'supplement', filterOptions.supplement)}
-          {renderFilterSection('Style & Thème', 'styleTheme', filterOptions.styleTheme)}
+          {/* Prix */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-gray-800">Prix</h3>
+              <span className="text-sm text-gray-600">{filters.price[0]} € - {filters.price[1]} €</span>
+            </div>
+            <div className="flex space-x-4">
+              <input
+                type="number"
+                value={filters.price[0]}
+                onChange={(e) => handleFilterChange('price', [parseInt(e.target.value), filters.price[1]])}
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+                placeholder="Min"
+              />
+              <input
+                type="number"
+                value={filters.price[1]}
+                onChange={(e) => handleFilterChange('price', [filters.price[0], parseInt(e.target.value)])}
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+                placeholder="Max"
+              />
+            </div>
+          </div>
+
+          {/* Note */}
+          <div>
+            <h3 className="font-semibold text-gray-800 mb-4">Note</h3>
+            <div className="flex space-x-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => handleFilterChange('note', star)}
+                  className={`text-2xl ${filters.note >= star ? 'text-yellow-400' : 'text-gray-300'}`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Type */}
+          <div>
+            <h3 className="font-semibold text-gray-800 mb-4">Type</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {filterOptions.type.map(option => (
+                <button
+                  key={option}
+                  onClick={() => handleFilterChange('type', option)}
+                  className={`p-3 text-sm rounded-xl border text-left transition-all ${
+                    isSelected('type', option)
+                      ? 'bg-pink-50 border-pink-500 text-pink-700'
+                      : 'hover:bg-gray-50 border-gray-200'
+                  }`}
+                >
+                  {option}
+                  {isSelected('type', option) && (
+                    <Check size={14} className="float-right text-pink-500" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Technique */}
+          <div>
+            <h3 className="font-semibold text-gray-800 mb-4">Technique</h3>
+            <div className="grid grid-cols-1 gap-2 max-h-32 overflow-y-auto">
+              {filterOptions.technique.map(option => (
+                <button
+                  key={option}
+                  onClick={() => handleFilterChange('technique', option)}
+                  className={`p-3 text-sm rounded-xl border text-left transition-all ${
+                    isSelected('technique', option)
+                      ? 'bg-pink-50 border-pink-500 text-pink-700'
+                      : 'hover:bg-gray-50 border-gray-200'
+                  }`}
+                >
+                  {option}
+                  {isSelected('technique', option) && (
+                    <Check size={14} className="float-right text-pink-500" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Couleur */}
+          <div>
+            <h3 className="font-semibold text-gray-800 mb-4">Couleur</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {filterOptions.couleur.map(renderColorOption)}
+            </div>
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="flex space-x-3 p-4 border-t border-gray-100">
+        <div className="flex space-x-3 p-6 border-t border-gray-100">
           <button
             onClick={clearFilters}
             className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-2xl font-medium hover:bg-gray-50 transition-colors"
           >
-            Effacer tout
+            Nettoyer
           </button>
           <button
             onClick={applyFilters}
-            className="flex-1 py-3 bg-pink-500 text-white rounded-2xl font-medium hover:bg-pink-600 transition-colors"
+            className="flex-1 py-3 bg-slate-800 text-white rounded-2xl font-medium hover:bg-slate-900 transition-colors"
           >
-            Appliquer
+            APPLIQUER
           </button>
         </div>
       </div>

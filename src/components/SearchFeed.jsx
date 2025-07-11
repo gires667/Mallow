@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Search, Filter, MapPin, Star, Heart, Bookmark, User } from 'lucide-react';
 import FilterModal from './FilterModal';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,16 +12,13 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
   const [activeFilters, setActiveFilters] = useState({});
 
   const trendingColors = [
-    { name: 'Rose Gold', color: '#F7B2BD', count: '2.4k' },
-    { name: 'Nude', color: '#F5DEB3', count: '1.8k' },
-    { name: 'Rouge', color: '#DC143C', count: '3.2k' },
-    { name: 'Noir', color: '#2C2C2C', count: '2.9k' },
-    { name: 'Bleu', color: '#4169E1', count: '1.5k' },
-    { name: 'Violet', color: '#8A2BE2', count: '2.1k' }
+    { name: 'Rose', color: '#F7B2BD', count: '2.4k' },
+    { name: 'Vert', color: '#90EE90', count: '1.8k' },
+    { name: 'Violet', color: '#DA70D6', count: '3.2k' }
   ];
 
   const popularPosts = posts.slice(0, 4);
-  const institutesToFollow = posts.slice(2, 6);
+  const institutesToFollow = posts.slice(0, 4);
 
   const toggleLike = (postId) => {
     const newLikedPosts = new Set(likedPosts);
@@ -44,7 +43,6 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
   const handleApplyFilters = (filters) => {
     setActiveFilters(filters);
     console.log('Filtres appliqués:', filters);
-    // Ici vous pouvez implémenter la logique de filtrage
   };
 
   const getActiveFilterCount = () => {
@@ -79,15 +77,15 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="text"
-              placeholder="Rechercher institut, service..."
+              placeholder="Post, institut, type d'ongles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
             />
           </div>
           <button 
             onClick={() => setShowFilterModal(true)}
-            className="relative p-2 bg-pink-500 text-white rounded-2xl hover:bg-pink-600 transition-colors"
+            className="relative p-3 bg-slate-800 text-white rounded-2xl hover:bg-slate-900 transition-colors"
           >
             <Filter size={18} />
             {getActiveFilterCount() > 0 && (
@@ -136,104 +134,135 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
             {/* Couleurs en tendance */}
             <section>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">Couleurs en tendance</h2>
-              <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+              <div className="flex space-x-4">
                 {trendingColors.map((color, index) => (
-                  <div key={index} className="flex-shrink-0 bg-white rounded-2xl p-3 shadow-sm border border-gray-100 min-w-[100px]">
+                  <div key={index} className="flex items-center space-x-2 bg-white rounded-2xl p-3 shadow-sm border border-gray-100 min-w-[120px]">
                     <div 
-                      className="w-12 h-12 rounded-full mx-auto mb-2" 
+                      className="w-8 h-8 rounded-full" 
                       style={{ backgroundColor: color.color }}
                     ></div>
-                    <p className="text-xs font-medium text-gray-800 text-center">{color.name}</p>
-                    <p className="text-xs text-gray-500 text-center">{color.count} posts</p>
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">{color.name}</p>
+                      <p className="text-xs text-gray-500">{color.count}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            {/* Posts populaires */}
+            {/* Posts populaires avec carrousel horizontal */}
             <section>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">Posts populaires</h2>
-              <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
-                {popularPosts.map((post) => (
-                  <div key={post.id} className="flex-shrink-0 bg-white rounded-2xl shadow-sm border border-gray-100 w-48">
-                    <div className="relative" onClick={() => onPostClick(post)}>
-                      <img
-                        src={post.image}
-                        alt="Nail art"
-                        className="w-full h-32 object-cover rounded-t-2xl cursor-pointer"
-                      />
-                      <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-xs font-semibold text-pink-600">
-                        {post.price}
-                      </div>
-                    </div>
-                    <div className="p-3">
-                      <button 
-                        className="flex items-center space-x-2 mb-2 hover:bg-gray-50 rounded-lg p-1 -m-1 transition-colors w-full"
-                        onClick={() => onInstituteClick(post)}
-                      >
-                        <div className="w-6 h-6 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">💅</span>
-                        </div>
-                        <span className="text-sm font-medium text-gray-800">{post.instituteName}</span>
-                      </button>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => toggleLike(post.id)}
-                            className="text-gray-600 hover:text-pink-500 transition-colors"
-                          >
-                            <Heart
-                              size={16}
-                              className={likedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
+              <div className="relative">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    dragFree: true,
+                    containScroll: "trimSnaps",
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2">
+                    {popularPosts.map((post) => (
+                      <CarouselItem key={post.id} className="pl-2 basis-auto">
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-48">
+                          <div className="relative" onClick={() => onPostClick(post)}>
+                            <img
+                              src={post.image}
+                              alt="Nail art"
+                              className="w-full h-32 object-cover rounded-t-2xl cursor-pointer"
                             />
-                          </button>
-                          <span className="text-xs text-gray-600">{post.likes}</span>
+                            <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-xs font-semibold text-pink-600">
+                              {post.price}
+                            </div>
+                          </div>
+                          <div className="p-3">
+                            <button 
+                              className="flex items-center space-x-2 mb-2 hover:bg-gray-50 rounded-lg p-1 -m-1 transition-colors w-full"
+                              onClick={() => onInstituteClick(post)}
+                            >
+                              <div className="w-6 h-6 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
+                                <span className="text-white text-xs">💅</span>
+                              </div>
+                              <span className="text-sm font-medium text-gray-800 truncate">{post.instituteName}</span>
+                            </button>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={() => toggleLike(post.id)}
+                                  className="text-gray-600 hover:text-pink-500 transition-colors"
+                                >
+                                  <Heart
+                                    size={16}
+                                    className={likedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
+                                  />
+                                </button>
+                                <span className="text-xs text-gray-600">{post.likes}</span>
+                              </div>
+                              <button
+                                onClick={() => toggleSave(post.id)}
+                                className="text-gray-600 hover:text-pink-500 transition-colors"
+                              >
+                                <Bookmark
+                                  size={16}
+                                  className={savedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
+                                />
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <button
-                          onClick={() => toggleSave(post.id)}
-                          className="text-gray-600 hover:text-pink-500 transition-colors"
-                        >
-                          <Bookmark
-                            size={16}
-                            className={savedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="hidden md:flex -left-4" />
+                  <CarouselNext className="hidden md:flex -right-4" />
+                </Carousel>
               </div>
             </section>
 
-            {/* Instituts à suivre */}
+            {/* Instituts à suivre avec carrousel horizontal */}
             <section>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">Instituts à suivre</h2>
-              <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
-                {institutesToFollow.map((institute) => (
-                  <button
-                    key={institute.id}
-                    onClick={() => onInstituteClick(institute)}
-                    className="flex-shrink-0 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[160px]"
-                  >
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span className="text-white text-lg">💅</span>
-                      </div>
-                      <h3 className="font-semibold text-gray-800 mb-1">{institute.instituteName}</h3>
-                      <div className="flex items-center justify-center space-x-1 text-sm text-gray-500 mb-2">
-                        <MapPin size={12} />
-                        <span>{institute.location}</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-1 mb-3">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                        <span className="text-sm text-gray-600">{institute.rating}</span>
-                      </div>
-                      <button className="bg-pink-500 text-white px-4 py-1 rounded-full text-sm hover:bg-pink-600 transition-colors">
-                        Suivre
-                      </button>
-                    </div>
-                  </button>
-                ))}
+              <div className="relative">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    dragFree: true,
+                    containScroll: "trimSnaps",
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent className="-ml-2">
+                    {institutesToFollow.map((institute) => (
+                      <CarouselItem key={institute.id} className="pl-2 basis-auto">
+                        <button
+                          onClick={() => onInstituteClick(institute)}
+                          className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow min-w-[140px]"
+                        >
+                          <div className="text-center">
+                            <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                              <span className="text-white text-sm">💅</span>
+                            </div>
+                            <h3 className="font-semibold text-gray-800 mb-1 text-sm truncate">{institute.instituteName}</h3>
+                            <div className="flex items-center justify-center space-x-1 text-xs text-gray-500 mb-2">
+                              <MapPin size={10} />
+                              <span className="truncate">{institute.location}</span>
+                            </div>
+                            <div className="flex items-center justify-center space-x-1 mb-2">
+                              <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                              <span className="text-xs text-gray-600">{institute.rating}</span>
+                            </div>
+                            <button className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs hover:bg-pink-600 transition-colors">
+                              Suivre
+                            </button>
+                          </div>
+                        </button>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="hidden md:flex -left-4" />
+                  <CarouselNext className="hidden md:flex -right-4" />
+                </Carousel>
               </div>
             </section>
           </div>
@@ -242,7 +271,7 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
             <h2 className="text-lg font-semibold text-gray-800">Résultats pour "{searchQuery}"</h2>
             
             {/* Posts filtrés */}
-            <div className="space-y-1">
+            <div className="space-y-4">
               {filteredPosts.map((post) => (
                 <div key={post.id} className="bg-white rounded-2xl shadow-sm border border-gray-100">
                   {/* Header du post */}
@@ -275,7 +304,7 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
                     <img
                       src={post.image}
                       alt="Nail art"
-                      className="w-full h-64 object-cover cursor-pointer"
+                      className="w-full h-48 object-cover cursor-pointer"
                     />
                     <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-sm font-semibold text-pink-600">
                       {post.price}
@@ -290,7 +319,7 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
                         className="flex items-center space-x-1 text-gray-600 hover:text-pink-500 transition-colors"
                       >
                         <Heart
-                          size={24}
+                          size={20}
                           className={likedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
                         />
                         <span className="text-sm">{post.likes + (likedPosts.has(post.id) ? 1 : 0)}</span>
@@ -301,7 +330,7 @@ const SearchFeed = ({ onBack, posts, onPostClick, onInstituteClick }) => {
                       className="text-gray-600 hover:text-pink-500 transition-colors"
                     >
                       <Bookmark
-                        size={24}
+                        size={20}
                         className={savedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
                       />
                     </button>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Heart, Share2, Bookmark, MapPin, Clock, Star, Search, Filter, User, Calendar, Home, Compass } from 'lucide-react';
 import PostDetail from './PostDetail';
@@ -17,6 +16,7 @@ const HomePage = ({ onLogout }) => {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [savedPosts, setSavedPosts] = useState(new Set());
 
+  // Réduction à 4 posts comme demandé
   const posts = [
     {
       id: 1,
@@ -69,54 +69,6 @@ const HomePage = ({ onLogout }) => {
       rating: 4.9,
       price: "60€",
       services: ["Extension", "Nail Art", "Premium"]
-    },
-    {
-      id: 5,
-      instituteName: "French Touch",
-      location: "Lyon 6ème",
-      image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400",
-      description: "Manucure française classique 🇫🇷",
-      likes: 98,
-      time: "2h",
-      rating: 4.6,
-      price: "40€",
-      services: ["Manucure", "French", "Classique"]
-    },
-    {
-      id: 6,
-      instituteName: "Nail Art Studio",
-      location: "Lyon 1er",
-      image: "https://images.unsplash.com/photo-1604654894058-0a8b1b6b6d10?w=400",
-      description: "Créations artistiques uniques 🎨",
-      likes: 187,
-      time: "1h",
-      rating: 4.8,
-      price: "55€",
-      services: ["Nail Art", "Créatif", "Unique"]
-    },
-    {
-      id: 7,
-      instituteName: "Nails Lab",
-      location: "Villeurbanne",
-      image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400",
-      description: "Techniques innovantes 💫",
-      likes: 142,
-      time: "5h",
-      rating: 4.5,
-      price: "38€",
-      services: ["Innovation", "Nail Art", "Moderne"]
-    },
-    {
-      id: 8,
-      instituteName: "Crystal Nails",
-      location: "Lyon 7ème",
-      image: "https://images.unsplash.com/photo-1607734834519-d8576ae60ea4?w=400",
-      description: "Brillance et élégance ✨",
-      likes: 178,
-      time: "6h",
-      rating: 4.6,
-      price: "42€",
-      services: ["Crystal", "Élégance", "Premium"]
     }
   ];
 
@@ -231,11 +183,15 @@ const HomePage = ({ onLogout }) => {
       <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-bold">💅</span>
+            <div className="w-8 h-8 rounded-full overflow-hidden">
+              <img 
+                src="/lovable-uploads/5abf4b99-537f-4d86-aa6f-04c64519565f.png" 
+                alt="Mallow Logo" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-800">NailSocial</h1>
+              <h1 className="text-xl font-bold text-gray-800">Mallow</h1>
               {posts[0]?.user && (
                 <p className="text-sm text-gray-600">{posts[0].user.greeting}</p>
               )}
@@ -264,11 +220,11 @@ const HomePage = ({ onLogout }) => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <input
                 type="text"
-                placeholder="Rechercher institut, service..."
-                className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500"
+                placeholder="Post, institut, type d'ongles..."
+                className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
               />
             </div>
-            <button className="p-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors">
+            <button className="p-3 bg-pink-500 text-white rounded-2xl hover:bg-pink-600 transition-colors">
               <Filter size={18} />
             </button>
           </div>
@@ -375,6 +331,7 @@ const HomePage = ({ onLogout }) => {
           </div>
         )}
 
+        
         {activeTab === 'search' && (
           <div className="p-4 space-y-6">
             <div>
