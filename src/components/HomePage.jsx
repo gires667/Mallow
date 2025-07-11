@@ -16,13 +16,13 @@ const HomePage = ({ onLogout }) => {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [savedPosts, setSavedPosts] = useState(new Set());
 
-  // Réduction à 4 posts comme demandé
+  // Exactement 4 posts avec design uniforme
   const posts = [
     {
       id: 1,
       instituteName: "Indigonails",
       location: "Villeurbanne",
-      image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400",
+      image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=320&fit=crop",
       description: "Et si on refraîchissait cette manucure ?",
       likes: 124,
       time: "2h",
@@ -38,7 +38,7 @@ const HomePage = ({ onLogout }) => {
       id: 2,
       instituteName: "GelX/Pose",
       location: "Lyon 3ème",
-      image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400",
+      image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400&h=320&fit=crop",
       description: "Nouvelle collection automne 🍂",
       likes: 89,
       time: "4h",
@@ -50,7 +50,7 @@ const HomePage = ({ onLogout }) => {
       id: 3,
       instituteName: "Beauty Studio",
       location: "Lyon 2ème",
-      image: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400",
+      image: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400&h=320&fit=crop",
       description: "Nail art personnalisé ✨",
       likes: 156,
       time: "1h",
@@ -62,7 +62,7 @@ const HomePage = ({ onLogout }) => {
       id: 4,
       instituteName: "Nails Paradise",
       location: "Villeurbanne",
-      image: "https://images.unsplash.com/photo-1583792208416-cb7a0707b2fa?w=400",
+      image: "https://images.unsplash.com/photo-1583792208416-cb7a0707b2fa?w=400&h=320&fit=crop",
       description: "Extensions d'ongles premium 💎",
       likes: 203,
       time: "3h",
@@ -183,12 +183,8 @@ const HomePage = ({ onLogout }) => {
       <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full overflow-hidden">
-              <img 
-                src="/lovable-uploads/5abf4b99-537f-4d86-aa6f-04c64519565f.png" 
-                alt="Mallow Logo" 
-                className="w-full h-full object-cover"
-              />
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
+              <span className="text-white font-bold text-sm">M</span>
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-800">Mallow</h1>
@@ -211,25 +207,6 @@ const HomePage = ({ onLogout }) => {
           </div>
         </div>
       </header>
-
-      {/* Search Bar for search tab */}
-      {activeTab === 'search' && (
-        <div className="bg-white border-b border-gray-100 px-4 py-3">
-          <div className="max-w-md mx-auto flex space-x-2">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-              <input
-                type="text"
-                placeholder="Post, institut, type d'ongles..."
-                className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
-              />
-            </div>
-            <button className="p-3 bg-pink-500 text-white rounded-2xl hover:bg-pink-600 transition-colors">
-              <Filter size={18} />
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Content */}
       <main className="max-w-md mx-auto pb-24">
@@ -262,7 +239,7 @@ const HomePage = ({ onLogout }) => {
                   </div>
                 </div>
 
-                {/* Image */}
+                {/* Image avec taille uniforme */}
                 <div className="relative" onClick={() => handlePostClick(post)}>
                   <img
                     src={post.image}
@@ -491,5 +468,111 @@ const HomePage = ({ onLogout }) => {
     </div>
   );
 };
+
+// Ajouter tous les handlers manquants
+const toggleLike = (postId) => {
+  const newLikedPosts = new Set(likedPosts);
+  if (newLikedPosts.has(postId)) {
+    newLikedPosts.delete(postId);
+  } else {
+    newLikedPosts.add(postId);
+  }
+  setLikedPosts(newLikedPosts);
+};
+
+const toggleSave = (postId) => {
+  const newSavedPosts = new Set(savedPosts);
+  if (newSavedPosts.has(postId)) {
+    newSavedPosts.delete(postId);
+  } else {
+    newSavedPosts.add(postId);
+  }
+  setSavedPosts(newSavedPosts);
+};
+
+const handlePostClick = (post) => {
+  setSelectedPost(post);
+  setCurrentView('postDetail');
+};
+
+const handleInstituteClick = (post) => {
+  setSelectedInstitute(post);
+  setCurrentView('instituteDetail');
+};
+
+const handleBookAppointment = (post, prestation) => {
+  setSelectedPost(post);
+  setPrestationDetails(prestation);
+  setCurrentView('booking');
+};
+
+const handleBookingConfirm = () => {
+  setCurrentView('home');
+  setActiveTab('home');
+};
+
+const handleBackToHome = () => {
+  setCurrentView('home');
+  setActiveTab('home');
+  setSelectedPost(null);
+  setSelectedInstitute(null);
+  setPrestationDetails(null);
+};
+
+const handleViewAppointments = () => {
+  setActiveTab('appointments');
+  setCurrentView('appointments');
+};
+
+const handleViewProfile = () => {
+  setActiveTab('profile');
+  setCurrentView('profile');
+};
+
+// Render different views
+if (currentView === 'postDetail') {
+  return (
+    <PostDetail 
+      post={selectedPost}
+      onBack={handleBackToHome}
+      onBookAppointment={handleBookAppointment}
+      onInstituteClick={handleInstituteClick}
+    />
+  );
+}
+
+if (currentView === 'instituteDetail') {
+  return (
+    <InstituteDetail 
+      institute={selectedInstitute}
+      onBack={handleBackToHome}
+      onBookService={handleBookAppointment}
+    />
+  );
+}
+
+if (currentView === 'booking') {
+  return (
+    <BookingFlow 
+      post={selectedPost}
+      prestationDetails={prestationDetails}
+      onBack={() => setCurrentView(selectedInstitute ? 'instituteDetail' : 'postDetail')}
+      onConfirm={handleBookingConfirm}
+      onViewAppointments={handleViewAppointments}
+    />
+  );
+}
+
+if (currentView === 'appointments') {
+  return <AppointmentsList onBack={handleBackToHome} onLogout={onLogout} onBookNew={handleBookAppointment} posts={posts} />;
+}
+
+if (currentView === 'profile') {
+  return <ProfileView onBack={handleBackToHome} onLogout={onLogout} />;
+}
+
+if (currentView === 'search') {
+  return <SearchFeed onBack={handleBackToHome} posts={posts} onPostClick={handlePostClick} onInstituteClick={handleInstituteClick} />;
+}
 
 export default HomePage;

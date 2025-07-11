@@ -39,11 +39,14 @@ const OnboardingFlow = ({ onComplete }) => {
         {/* Image principale */}
         <div className="flex-1 flex items-center justify-center px-8 pt-16">
           <div className="w-full max-w-sm">
-            <img 
-              src="/lovable-uploads/f2044bee-d477-4e35-b6dd-0366846f69d7.png" 
-              alt="Mains avec manucure"
-              className="w-full h-auto rounded-3xl shadow-lg"
-            />
+            <div className="w-full h-80 bg-gradient-to-br from-pink-300 to-rose-400 rounded-3xl shadow-lg flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-4">
+                  <span className="text-4xl">💅</span>
+                </div>
+                <p className="text-white font-semibold text-lg">Manucure professionnelle</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -82,11 +85,14 @@ const OnboardingFlow = ({ onComplete }) => {
       {/* Image principale */}
       <div className="flex-1 flex items-center justify-center px-8 pt-16">
         <div className="w-full max-w-sm">
-          <img 
-            src="/lovable-uploads/c942d29c-e936-4f8e-a5f5-b429a8a43917.png" 
-            alt="Salon de manucure"
-            className="w-full h-auto rounded-3xl shadow-lg"
-          />
+          <div className="w-full h-80 bg-gradient-to-br from-blue-300 to-purple-400 rounded-3xl shadow-lg flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-white rounded-xl shadow-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">📍</span>
+              </div>
+              <p className="text-white font-semibold">Trouvez près de chez vous</p>
+            </div>
+          </div>
         </div>
       </div>
 
