@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, Check, Minus, Plus } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 
 const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) => {
   const [filters, setFilters] = useState({
@@ -17,49 +17,16 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
     styleTheme: []
   });
 
-  // Définition des options pour chaque catégorie
   const filterOptions = {
     technique: [
       'Ongle naturelle', 'Gainage (sur ongle naturel)', 'Semi permanent (sur ongle naturel)',
       'Capsule', 'Chalon', 'Gel acrylique', 'Polygel', 'Porcelaine', 'Gel UV/Led',
-      'Résine poudre', 'Fibre de soie', 'Gel, X', 'Acrygel', 'Press on'
+      'Résine poudre', 'Fibre de soie', 'Gel X', 'Acrygel', 'Press on'
     ],
     type: ['Manucure', 'Pédicure'],
-    taille: [
-      { label: 'S (0-5 mm)', value: 'S' },
-      { label: 'M (5-10 mm)', value: 'M' },
-      { label: 'L (10-15 mm)', value: 'L' },
-      { label: 'XL (15-20 mm)', value: 'XL' },
-      { label: 'XXL (>20 mm)', value: 'XXL' }
-    ],
     couleur: [
       'Blanc', 'Rouge', 'Orange', 'Gris', 'Noir', 'Jaune',
       'Marron', 'Beige', 'Bleu', 'Vert', 'Rose', 'Violet'
-    ],
-    forme: {
-      'Classique': ['Carré', 'Carré arrondie', 'Rond', 'Ovale'],
-      'Allongé': ['Amande', 'Ballerine', 'Stiletto', 'Edge'],
-      'Créative': ['Lipstick', 'Pipe', 'Flare', 'Arrowhead', 'Bridge'],
-      'Artistique': ['Russian almond', 'Mountain Peak', 'Squareletto']
-    },
-    finitionCouleur: {
-      'Classique': ['Brillant', 'Matte', 'Satiné', 'Pastel', 'Nude'],
-      'Texturé': ['Sucre', 'Velours', 'Sable', 'Gomme'],
-      'Métallique/Nacrée': ['Doré', 'Argenté', 'Métallisé', 'Chrome', 'Nacré', 'Irisé'],
-      'Paillette/Brillant': ['Paillettes fine', 'Paillettes épaisse', 'Holographique', 'Flakes', 'Effet diamant'],
-      'Finition spéciale': ['Caméléon', 'Thermotte chronique', 'Phosphorescent', 'Néon UV Effect', 'Effect opale'],
-      'Finition artistique': ['Marbre', 'Ombre', 'Écailler', 'Effet', 'Effet aquatique', 'Effet plume', 'Effet givré', 'Effet Jean']
-    },
-    supplement: {
-      'Artistique': ['Imprimés', 'Lettre et chiffres', 'Dessin main', 'Graffiti'],
-      'Cat eyes': ['Cat eyes'],
-      'Effet 3D': ['Relief, 3D, gel ou acrylique', 'Strasse / cristaux', 'Perles', 'Studs / piercing', 'Charms / bijoux', 'Effet bulle'],
-      'Encapsulation': ['Encapsulation / incrustation']
-    },
-    styleTheme: [
-      'Classique', 'French manucure', 'Élégant & chic', 'Fantaisie créatif',
-      'L\'amour', 'Saisonnier nature', 'Mode haute couture', 'Pop culture',
-      'Dark romantique', 'Kawaii Art'
     ]
   };
 
@@ -103,7 +70,6 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
 
   const applyFilters = () => {
     onApplyFilters(filters);
-    onClose();
   };
 
   const renderColorOption = (color) => {
@@ -150,7 +116,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center justify-center">
       <div className="bg-white w-full max-w-lg max-h-[90vh] rounded-t-3xl md:rounded-3xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white">
           <h2 className="text-xl font-bold text-gray-900">Filtres</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
             <X size={24} className="text-gray-600" />
@@ -158,7 +124,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)] space-y-6">
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)] space-y-6 bg-white">
           {/* Distance */}
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -172,7 +138,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
                 max="50"
                 value={filters.distance}
                 onChange={(e) => handleFilterChange('distance', parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               />
             </div>
           </div>
@@ -188,14 +154,14 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
                 type="number"
                 value={filters.price[0]}
                 onChange={(e) => handleFilterChange('price', [parseInt(e.target.value), filters.price[1]])}
-                className="flex-1 p-2 border border-gray-300 rounded-lg"
+                className="flex-1 p-2 border border-gray-300 rounded-lg bg-white"
                 placeholder="Min"
               />
               <input
                 type="number"
                 value={filters.price[1]}
                 onChange={(e) => handleFilterChange('price', [filters.price[0], parseInt(e.target.value)])}
-                className="flex-1 p-2 border border-gray-300 rounded-lg"
+                className="flex-1 p-2 border border-gray-300 rounded-lg bg-white"
                 placeholder="Max"
               />
             </div>
@@ -228,7 +194,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
                   className={`p-3 text-sm rounded-xl border text-left transition-all ${
                     isSelected('type', option)
                       ? 'bg-pink-50 border-pink-500 text-pink-700'
-                      : 'hover:bg-gray-50 border-gray-200'
+                      : 'hover:bg-gray-50 border-gray-200 bg-white'
                   }`}
                 >
                   {option}
@@ -243,7 +209,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
           {/* Technique */}
           <div>
             <h3 className="font-semibold text-gray-800 mb-4">Technique</h3>
-            <div className="grid grid-cols-1 gap-2 max-h-32 overflow-y-auto">
+            <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
               {filterOptions.technique.map(option => (
                 <button
                   key={option}
@@ -251,7 +217,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
                   className={`p-3 text-sm rounded-xl border text-left transition-all ${
                     isSelected('technique', option)
                       ? 'bg-pink-50 border-pink-500 text-pink-700'
-                      : 'hover:bg-gray-50 border-gray-200'
+                      : 'hover:bg-gray-50 border-gray-200 bg-white'
                   }`}
                 >
                   {option}
@@ -273,7 +239,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, context = 'search' }) =>
         </div>
 
         {/* Footer */}
-        <div className="flex space-x-3 p-6 border-t border-gray-100">
+        <div className="flex space-x-3 p-6 border-t border-gray-100 bg-white">
           <button
             onClick={clearFilters}
             className="flex-1 py-3 border border-gray-300 text-gray-700 rounded-2xl font-medium hover:bg-gray-50 transition-colors"

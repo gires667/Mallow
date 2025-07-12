@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { ArrowLeft, Calendar, Camera, Check, Plus, Filter } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import FilterModal from './FilterModal';
+import BookingConfirmation from './BookingConfirmation';
 
 const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppointments }) => {
   const [selectedSpecialist, setSelectedSpecialist] = useState('');
@@ -22,9 +24,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
     { id: 5, name: 'Marie', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face' },
     { id: 6, name: 'Alex', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=face' },
     { id: 7, name: 'Sophie', image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=80&h=80&fit=crop&crop=face' },
-    { id: 8, name: 'Lucas', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face' },
-    { id: 9, name: 'Emma', image: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=80&h=80&fit=crop&crop=face' },
-    { id: 10, name: 'Thomas', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face' }
+    { id: 8, name: 'Lucas', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face' }
   ];
 
   const dates = [
@@ -37,17 +37,13 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
     { date: '22', day: 'Sam', available: true },
     { date: '23', day: 'Dim', available: true },
     { date: '24', day: 'Lun', available: true },
-    { date: '25', day: 'Mar', available: true },
-    { date: '26', day: 'Mer', available: true },
-    { date: '27', day: 'Jeu', available: true },
-    { date: '28', day: 'Ven', available: true }
+    { date: '25', day: 'Mar', available: true }
   ];
 
   const timeSlots = [
     '9:00', '9:30', '10:00', '10:30', '11:00', '11:30',
     '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
-    '20:00', '20:30', '21:00', '21:30'
+    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'
   ];
 
   const handlePhotoUpload = (event) => {
@@ -65,70 +61,29 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
     setShowConfirmation(true);
   };
 
-  const handleConsultFeed = () => {
-    onConfirm();
-  };
-
   const handleFilterApply = (filters) => {
     setSelectedFilters(filters);
+    setShowFilterModal(false);
     if (filters.technique && filters.technique.length > 0) {
       setShowTechniqueSelection(true);
     }
   };
 
+  const handleViewFeed = () => {
+    onConfirm();
+  };
+
   if (showConfirmation) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-100 sticky top-0 z-50">
-          <div className="flex items-center p-4">
-            <button onClick={onBack} className="mr-4">
-              <ArrowLeft size={24} className="text-gray-600" />
-            </button>
-          </div>
-        </div>
-
-        {/* Confirmation Content */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4">
-          <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mb-6">
-            <Check size={40} className="text-pink-500" />
-          </div>
-          
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-            Votre rendez-vous<br />est confirmé !
-          </h2>
-          
-          <p className="text-gray-600 text-center mb-2">
-            Vous pouvez consulter les informations
-          </p>
-          <p className="text-gray-600 text-center mb-2">
-            de vos rendez-vous dans
-          </p>
-          <p className="text-gray-600 text-center mb-12">
-            l'onglet « Mes RDV »
-          </p>
-
-          <div className="w-full max-w-sm space-y-4">
-            <button
-              onClick={handleConsultFeed}
-              className="w-full bg-slate-800 text-white py-4 rounded-2xl font-semibold hover:bg-slate-900 transition-colors"
-            >
-              CONSULTER LE FEED
-            </button>
-            <button
-              onClick={onViewAppointments}
-              className="w-full text-gray-600 py-2 text-center hover:text-gray-800 transition-colors"
-            >
-              Voir mes rendez-vous
-            </button>
-          </div>
-        </div>
-      </div>
+      <BookingConfirmation 
+        onViewFeed={handleViewFeed}
+        onViewAppointments={onViewAppointments}
+      />
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 relative">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div className="flex items-center p-4">
@@ -141,7 +96,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
 
       {/* Content */}
       <div className="max-w-md mx-auto p-4 space-y-8">
-        {/* 1. Prestation sélectionnée avec choix de technique */}
+        {/* 1. Prestation sélectionnée */}
         <div>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">1. Prestation sélectionnée</h2>
           
@@ -183,7 +138,6 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
                   {selectedFilters.technique && selectedFilters.technique[0]}
                 </h3>
                 
-                {/* Affichage des autres filtres sélectionnés */}
                 <div className="space-y-2 text-sm">
                   {selectedFilters.type && selectedFilters.type.length > 0 && (
                     <div className="flex items-center space-x-2">
@@ -222,125 +176,76 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
               </button>
             </div>
           )}
-          
-          <button className="text-gray-500 text-sm mt-2">Ajouter une prestation</button>
         </div>
 
-        {/* 2. Sélectionner votre spécialiste - CAROUSEL SWIPE AMÉLIORÉ */}
+        {/* Sections suivantes uniquement si technique sélectionnée */}
         {showTechniqueSelection && (
           <>
+            {/* 2. Sélectionner votre spécialiste */}
             <div>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">2. Sélectionnez votre spécialiste</h2>
-              <div className="relative">
-                <Carousel
-                  opts={{
-                    align: "start",
-                    dragFree: true,
-                    containScroll: "trimSnaps",
-                    slidesToScroll: 1,
-                  }}
-                  className="w-full"
-                >
-                  <CarouselContent className="-ml-2">
-                    {specialists.map((specialist) => (
-                      <CarouselItem key={specialist.id} className="pl-2 basis-auto">
-                        <button
-                          onClick={() => setSelectedSpecialist(specialist.name)}
-                          className={`flex flex-col items-center space-y-2 p-3 rounded-2xl transition-all duration-200 min-w-[80px] ${
-                            selectedSpecialist === specialist.name
-                              ? 'bg-pink-50 border-2 border-pink-500 shadow-md transform scale-105'
-                              : 'hover:bg-gray-50 border-2 border-transparent bg-white hover:shadow-sm'
-                          }`}
-                        >
-                          <div className="w-14 h-14 rounded-full overflow-hidden">
-                            <img
-                              src={specialist.image}
-                              alt={specialist.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <span className="text-sm font-medium text-gray-900">{specialist.name}</span>
-                        </button>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="hidden md:flex -left-4" />
-                  <CarouselNext className="hidden md:flex -right-4" />
-                </Carousel>
+              <div className="grid grid-cols-2 gap-3">
+                {specialists.map((specialist) => (
+                  <button
+                    key={specialist.id}
+                    onClick={() => setSelectedSpecialist(specialist.name)}
+                    className={`flex flex-col items-center space-y-2 p-3 rounded-2xl transition-all duration-200 ${
+                      selectedSpecialist === specialist.name
+                        ? 'bg-pink-50 border-2 border-pink-500 shadow-md'
+                        : 'hover:bg-gray-50 border-2 border-transparent bg-white hover:shadow-sm'
+                    }`}
+                  >
+                    <div className="w-14 h-14 rounded-full overflow-hidden">
+                      <img
+                        src={specialist.image}
+                        alt={specialist.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-sm font-medium text-gray-900">{specialist.name}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* 3. Sélectionner une date - CAROUSEL SWIPE AMÉLIORÉ */}
+            {/* 3. Sélectionner une date */}
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">3. Sélectionner une date</h2>
-                <button className="text-gray-500 text-sm">Février ▼</button>
-              </div>
-              <div className="relative">
-                <Carousel
-                  opts={{
-                    align: "start",
-                    dragFree: true,
-                    containScroll: "trimSnaps",
-                    slidesToScroll: 1,
-                  }}
-                  className="w-full"
-                >
-                  <CarouselContent className="-ml-2">
-                    {dates.map((dateOption, index) => (
-                      <CarouselItem key={index} className="pl-2 basis-auto">
-                        <button
-                          onClick={() => setSelectedDate(dateOption.date)}
-                          className={`flex flex-col items-center p-3 rounded-2xl transition-all duration-200 min-w-[60px] ${
-                            selectedDate === dateOption.date
-                              ? 'bg-slate-800 text-white shadow-md transform scale-105'
-                              : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
-                          }`}
-                        >
-                          <span className="text-xs mb-1">{dateOption.day}</span>
-                          <span className="text-lg font-semibold">{dateOption.date}</span>
-                        </button>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="hidden md:flex -left-4" />
-                  <CarouselNext className="hidden md:flex -right-4" />
-                </Carousel>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">3. Sélectionner une date</h2>
+              <div className="flex space-x-3 overflow-x-auto pb-2">
+                {dates.map((dateOption, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedDate(dateOption.date)}
+                    className={`flex-shrink-0 flex flex-col items-center p-3 rounded-2xl transition-all duration-200 min-w-[60px] ${
+                      selectedDate === dateOption.date
+                        ? 'bg-slate-800 text-white shadow-md'
+                        : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
+                    }`}
+                  >
+                    <span className="text-xs mb-1">{dateOption.day}</span>
+                    <span className="text-lg font-semibold">{dateOption.date}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* 4. Sélectionner un horaire - CAROUSEL SWIPE AMÉLIORÉ */}
+            {/* 4. Sélectionner un horaire */}
             <div>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">4. Sélectionner un horaire</h2>
-              <div className="relative">
-                <Carousel
-                  opts={{
-                    align: "start",
-                    dragFree: true,
-                    containScroll: "trimSnaps",
-                    slidesToScroll: 1,
-                  }}
-                  className="w-full"
-                >
-                  <CarouselContent className="-ml-2">
-                    {timeSlots.map((time) => (
-                      <CarouselItem key={time} className="pl-2 basis-auto">
-                        <button
-                          onClick={() => setSelectedTime(time)}
-                          className={`px-4 py-2 rounded-2xl transition-all duration-200 min-w-[70px] ${
-                            selectedTime === time
-                              ? 'bg-slate-800 text-white shadow-md transform scale-105'
-                              : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
-                          }`}
-                        >
-                          <span className="text-sm font-medium">{time}</span>
-                        </button>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="hidden md:flex -left-4" />
-                  <CarouselNext className="hidden md:flex -right-4" />
-                </Carousel>
+              <div className="grid grid-cols-4 gap-2">
+                {timeSlots.map((time) => (
+                  <button
+                    key={time}
+                    onClick={() => setSelectedTime(time)}
+                    className={`py-2 rounded-2xl transition-all duration-200 ${
+                      selectedTime === time
+                        ? 'bg-slate-800 text-white shadow-md'
+                        : 'bg-white hover:bg-gray-50 border border-gray-200 hover:shadow-sm'
+                    }`}
+                  >
+                    <span className="text-sm font-medium">{time}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -358,8 +263,6 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
             {/* 6. Illustrer avec une photo */}
             <div>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">6. Illustrer avec une photo</h2>
-              <p className="text-gray-600 text-sm mb-4">Ajouter une photo depuis ma galerie</p>
-              
               <div className="flex space-x-4">
                 <label className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
                   <Camera size={24} className="text-gray-400" />
@@ -387,11 +290,9 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
                   </div>
                 )}
               </div>
-              
-              <p className="text-gray-600 text-sm mt-4">Ajouter un post enregistré</p>
             </div>
 
-            {/* Date et heure récap + Confirmer - DYNAMIC UPDATE */}
+            {/* Récapitulatif et confirmation */}
             <div className="bg-white rounded-2xl p-4 border border-gray-100">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-gray-600">Date :</span>
@@ -410,7 +311,8 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
               
               <button
                 onClick={handleConfirm}
-                className="w-full bg-slate-800 text-white py-4 rounded-2xl font-semibold hover:bg-slate-900 transition-colors"
+                disabled={!selectedSpecialist}
+                className="w-full bg-slate-800 text-white py-4 rounded-2xl font-semibold hover:bg-slate-900 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
                 CONFIRMER
               </button>
@@ -419,13 +321,17 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
         )}
       </div>
 
-      {/* Filter Modal */}
-      <FilterModal
-        isOpen={showFilterModal}
-        onClose={() => setShowFilterModal(false)}
-        onApplyFilters={handleFilterApply}
-        context="booking"
-      />
+      {/* Filter Modal - Positionné en overlay complet */}
+      {showFilterModal && (
+        <div className="fixed inset-0 z-50">
+          <FilterModal
+            isOpen={showFilterModal}
+            onClose={() => setShowFilterModal(false)}
+            onApplyFilters={handleFilterApply}
+            context="booking"
+          />
+        </div>
+      )}
     </div>
   );
 };
