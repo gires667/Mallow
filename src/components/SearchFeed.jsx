@@ -9,14 +9,18 @@ const SearchFeed = ({ onBack, onPostClick }) => {
   const [savedPosts, setSavedPosts] = useState(new Set());
 
   const trendingColors = [
-    { name: 'Rouge', color: '#DC2626', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=60&h=60&fit=crop' },
-    { name: 'Rose', color: '#EC4899', image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=60&h=60&fit=crop' },
-    { name: 'Bleu', color: '#2563EB', image: 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=60&h=60&fit=crop' },
-    { name: 'Violet', color: '#7C3AED', image: 'https://images.unsplash.com/photo-1596188683551-6230e38b28de?w=60&h=60&fit=crop' },
-    { name: 'Vert', color: '#16A34A', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=60&h=60&fit=crop' },
-    { name: 'Orange', color: '#EA580C', image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=60&h=60&fit=crop' },
-    { name: 'Jaune', color: '#EAB308', image: 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=60&h=60&fit=crop' },
-    { name: 'Noir', color: '#000000', image: 'https://images.unsplash.com/photo-1596188683551-6230e38b28de?w=60&h=60&fit=crop' }
+    { name: 'Rouge', color: '#DC2626' },
+    { name: 'Rose', color: '#EC4899' },
+    { name: 'Bleu', color: '#2563EB' },
+    { name: 'Violet', color: '#7C3AED' },
+    { name: 'Vert', color: '#16A34A' },
+    { name: 'Orange', color: '#EA580C' },
+    { name: 'Jaune', color: '#EAB308' },
+    { name: 'Noir', color: '#000000' },
+    { name: 'Blanc', color: '#FFFFFF' },
+    { name: 'Marron', color: '#92400E' },
+    { name: 'Beige', color: '#F5F5DC' },
+    { name: 'Gris', color: '#6B7280' }
   ];
 
   const popularPosts = [
@@ -170,17 +174,11 @@ const SearchFeed = ({ onBack, onPostClick }) => {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Couleurs tendances</h3>
               <div className="flex space-x-3 overflow-x-auto pb-2">
                 {trendingColors.map((colorItem, index) => (
-                  <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2">
+                  <div key={index} className="flex-shrink-0 flex flex-col items-center space-y-2 min-w-[60px]">
                     <div 
-                      className="w-12 h-12 rounded-full border-2 border-gray-200 overflow-hidden"
+                      className="w-12 h-12 rounded-full border-2 border-gray-200"
                       style={{ backgroundColor: colorItem.color }}
-                    >
-                      <img 
-                        src={colorItem.image} 
-                        alt={colorItem.name}
-                        className="w-full h-full object-cover mix-blend-overlay"
-                      />
-                    </div>
+                    />
                     <span className="text-xs text-gray-600 text-center">{colorItem.name}</span>
                   </div>
                 ))}
