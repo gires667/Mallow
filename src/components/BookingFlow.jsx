@@ -21,7 +21,9 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
     { id: 3, name: 'Coco', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face' },
     { id: 4, name: 'Samia', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face' },
     { id: 5, name: 'Marie', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face' },
-    { id: 6, name: 'Sophie', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=80&h=80&fit=crop&crop=face' }
+    { id: 6, name: 'Sophie', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=80&h=80&fit=crop&crop=face' },
+    { id: 7, name: 'Anna', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&h=80&fit=crop&crop=face' },
+    { id: 8, name: 'Julie', image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=80&h=80&fit=crop&crop=face' }
   ];
 
   const dates = [
@@ -33,13 +35,16 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
     { date: '21', day: 'Ven', available: true },
     { date: '22', day: 'Sam', available: true },
     { date: '23', day: 'Dim', available: true },
-    { date: '24', day: 'Lun', available: true }
+    { date: '24', day: 'Lun', available: true },
+    { date: '25', day: 'Mar', available: true },
+    { date: '26', day: 'Mer', available: true },
+    { date: '27', day: 'Jeu', available: true }
   ];
 
   const timeSlots = [
     '9:00', '9:30', '10:00', '10:30', '11:00', '11:30',
     '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-    '17:00', '17:30', '18:00', '18:30'
+    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'
   ];
 
   const handlePhotoUpload = (event) => {
@@ -121,7 +126,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
         {/* 2. Sélectionner votre spécialiste */}
         <div className="bg-white rounded-2xl p-4 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">2. Sélectionnez votre spécialiste</h2>
-          <div className="flex space-x-4 overflow-x-auto pb-2">
+          <div className="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
             {specialists.map((specialist) => (
               <button
                 key={specialist.id}
@@ -151,7 +156,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
             <h2 className="text-lg font-semibold text-gray-900">3. Sélectionner une date</h2>
             <span className="text-sm text-gray-500">Février ▽</span>
           </div>
-          <div className="flex space-x-3 overflow-x-auto pb-2">
+          <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
             {dates.map((dateOption, index) => (
               <button
                 key={index}
@@ -175,7 +180,7 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
           <div className="text-center mb-4">
             <span className="text-2xl font-semibold text-gray-900">{selectedTime}</span>
           </div>
-          <div className="flex space-x-2 overflow-x-auto pb-2">
+          <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
             {timeSlots.map((time) => (
               <button
                 key={time}
@@ -260,17 +265,15 @@ const BookingFlow = ({ post, prestationDetails, onBack, onConfirm, onViewAppoint
         </div>
       </div>
 
-      {/* Filter Modal - Overlay complet */}
+      {/* Filter Modal */}
       {showFilterModal && (
-        <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="w-full h-full bg-white">
-            <FilterModal
-              isOpen={showFilterModal}
-              onClose={() => setShowFilterModal(false)}
-              onApplyFilters={handleFilterApply}
-              context="booking"
-            />
-          </div>
+        <div className="fixed inset-0 z-[9999]">
+          <FilterModal
+            isOpen={showFilterModal}
+            onClose={() => setShowFilterModal(false)}
+            onApplyFilters={handleFilterApply}
+            context="booking"
+          />
         </div>
       )}
     </div>
