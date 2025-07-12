@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { Heart, Share2, Bookmark, MapPin, Clock, Star, Search, Filter, User, Calendar, Home, Compass } from 'lucide-react';
 import PostDetail from './PostDetail';
 import BookingFlow from './BookingFlow';
+import BookingConfirmation from './BookingConfirmation';
 import AppointmentsList from './AppointmentsList';
 import ProfileView from './ProfileView';
 import InstituteDetail from './InstituteDetail';
@@ -17,19 +17,19 @@ const HomePage = ({ onLogout }) => {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [savedPosts, setSavedPosts] = useState(new Set());
 
-  // Exactement 4 posts avec design uniforme
+  // 8 posts arrangés en grille 2x2x2x2
   const posts = [
     {
       id: 1,
       instituteName: "Indigonails",
       location: "Villeurbanne",
-      image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=320&fit=crop",
+      image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&h=200&fit=crop",
       description: "Et si on refraîchissait cette manucure ?",
       likes: 124,
       time: "2h",
       rating: 4.8,
       price: "35€",
-      services: ["Manucure", "Nail Art", "Semi-permanent"],
+      services: ["Manucure", "Nail Art"],
       user: {
         name: "Lea",
         greeting: "Salut, Lea"
@@ -39,37 +39,85 @@ const HomePage = ({ onLogout }) => {
       id: 2,
       instituteName: "GelX/Pose",
       location: "Lyon 3ème",
-      image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400&h=320&fit=crop",
+      image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=200&h=200&fit=crop",
       description: "Nouvelle collection automne 🍂",
       likes: 89,
       time: "4h",
       rating: 4.9,
       price: "45€",
-      services: ["Nail Art", "Extension", "Pédicure"]
+      services: ["Extension", "Pédicure"]
     },
     {
       id: 3,
       instituteName: "Beauty Studio",
       location: "Lyon 2ème",
-      image: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400&h=320&fit=crop",
+      image: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=200&h=200&fit=crop",
       description: "Nail art personnalisé ✨",
       likes: 156,
       time: "1h",
       rating: 4.7,
       price: "50€",
-      services: ["Nail Art", "Manucure", "Design"]
+      services: ["Nail Art", "Design"]
     },
     {
       id: 4,
       instituteName: "Nails Paradise",
       location: "Villeurbanne",
-      image: "https://images.unsplash.com/photo-1583792208416-cb7a0707b2fa?w=400&h=320&fit=crop",
+      image: "https://images.unsplash.com/photo-1583792208416-cb7a0707b2fa?w=200&h=200&fit=crop",
       description: "Extensions d'ongles premium 💎",
       likes: 203,
       time: "3h",
       rating: 4.9,
       price: "60€",
-      services: ["Extension", "Nail Art", "Premium"]
+      services: ["Extension", "Premium"]
+    },
+    {
+      id: 5,
+      instituteName: "French Nails",
+      location: "Lyon 6ème",
+      image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&h=200&fit=crop",
+      description: "French manucure classique",
+      likes: 95,
+      time: "1h",
+      rating: 4.6,
+      price: "30€",
+      services: ["French", "Classique"]
+    },
+    {
+      id: 6,
+      instituteName: "Color Studio",
+      location: "Lyon 1er",
+      image: "https://images.unsplash.com/photo-1599948985230-6d0c0d78a1b4?w=200&h=200&fit=crop",
+      description: "Couleurs vives et tendance",
+      likes: 142,
+      time: "2h",
+      rating: 4.8,
+      price: "40€",
+      services: ["Couleur", "Tendance"]
+    },
+    {
+      id: 7,
+      instituteName: "Nail Boutique",
+      location: "Lyon 7ème",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop",
+      description: "Soins des ongles premium",
+      likes: 178,
+      time: "1h30",
+      rating: 4.9,
+      price: "55€",
+      services: ["Soins", "Premium"]
+    },
+    {
+      id: 8,
+      instituteName: "Art & Nails",
+      location: "Lyon 4ème",
+      image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=200&h=200&fit=crop",
+      description: "Art des ongles créatif",
+      likes: 267,
+      time: "2h30",
+      rating: 5.0,
+      price: "65€",
+      services: ["Art", "Créatif"]
     }
   ];
 
@@ -110,8 +158,7 @@ const HomePage = ({ onLogout }) => {
   };
 
   const handleBookingConfirm = () => {
-    setCurrentView('home');
-    setActiveTab('home');
+    setCurrentView('confirmation');
   };
 
   const handleBackToHome = () => {
@@ -166,6 +213,15 @@ const HomePage = ({ onLogout }) => {
     );
   }
 
+  if (currentView === 'confirmation') {
+    return (
+      <BookingConfirmation 
+        onViewFeed={handleBackToHome}
+        onViewAppointments={handleViewAppointments}
+      />
+    );
+  }
+
   if (currentView === 'appointments') {
     return <AppointmentsList onBack={handleBackToHome} onLogout={onLogout} onBookNew={handleBookAppointment} posts={posts} />;
   }
@@ -184,7 +240,7 @@ const HomePage = ({ onLogout }) => {
       <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
               <span className="text-white font-bold text-sm">M</span>
             </div>
             <div>
@@ -212,100 +268,77 @@ const HomePage = ({ onLogout }) => {
       {/* Content */}
       <main className="max-w-md mx-auto pb-24">
         {activeTab === 'home' && (
-          <div className="space-y-1">
-            {posts.map((post) => (
-              <div key={post.id} className="bg-white">
-                {/* Header du post */}
-                <div className="flex items-center justify-between p-4 pb-3">
-                  <button 
-                    className="flex items-center space-x-3 hover:bg-gray-50 rounded-lg p-1 -m-1 transition-colors"
-                    onClick={() => handleInstituteClick(post)}
-                  >
-                    <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">💅</span>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-800">{post.instituteName}</h3>
-                      <div className="flex items-center space-x-1 text-sm text-gray-500">
-                        <MapPin size={12} />
-                        <span>{post.location}</span>
-                        <span>•</span>
-                        <span>{post.time}</span>
-                      </div>
-                    </div>
-                  </button>
-                  <div className="flex items-center space-x-1 text-sm">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-gray-600">{post.rating}</span>
-                  </div>
-                </div>
-
-                {/* Image avec taille uniforme */}
-                <div className="relative" onClick={() => handlePostClick(post)}>
-                  <img
-                    src={post.image}
-                    alt="Nail art"
-                    className="w-full h-80 object-cover cursor-pointer"
-                  />
-                  <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-sm font-semibold text-pink-600">
-                    {post.price}
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center space-x-4">
-                    <button
-                      onClick={() => toggleLike(post.id)}
-                      className="flex items-center space-x-1 text-gray-600 hover:text-pink-500 transition-colors"
-                    >
-                      <Heart
-                        size={24}
-                        className={likedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
-                      />
-                      <span className="text-sm">{post.likes + (likedPosts.has(post.id) ? 1 : 0)}</span>
-                    </button>
-                    <button className="text-gray-600 hover:text-pink-500 transition-colors">
-                      <Share2 size={24} />
-                    </button>
-                  </div>
-                  <button
-                    onClick={() => toggleSave(post.id)}
-                    className="text-gray-600 hover:text-pink-500 transition-colors"
-                  >
-                    <Bookmark
-                      size={24}
-                      className={savedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
+          <div className="p-4">
+            {/* Grille 2x2 pour 8 posts */}
+            <div className="grid grid-cols-2 gap-3">
+              {posts.map((post) => (
+                <div key={post.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  {/* Image uniforme */}
+                  <div className="relative" onClick={() => handlePostClick(post)}>
+                    <img
+                      src={post.image}
+                      alt="Nail art"
+                      className="w-full h-32 object-cover cursor-pointer"
                     />
-                  </button>
-                </div>
+                    <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-xs font-semibold text-pink-600">
+                      {post.price}
+                    </div>
+                  </div>
 
-                {/* Description */}
-                <div className="px-4 pb-3">
-                  <p className="text-gray-800 mb-2">{post.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {post.services.map((service, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-pink-100 text-pink-600 text-xs rounded-full"
+                  {/* Contenu */}
+                  <div className="p-3">
+                    <button 
+                      className="flex items-center space-x-2 mb-2 w-full text-left"
+                      onClick={() => handleInstituteClick(post)}
+                    >
+                      <div className="w-6 h-6 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs">💅</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-800 text-sm truncate">{post.instituteName}</h3>
+                        <div className="flex items-center space-x-1 text-xs text-gray-500">
+                          <MapPin size={10} />
+                          <span className="truncate">{post.location}</span>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Actions */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => toggleLike(post.id)}
+                          className="flex items-center space-x-1"
+                        >
+                          <Heart
+                            size={16}
+                            className={likedPosts.has(post.id) ? 'text-pink-500 fill-current' : 'text-gray-400'}
+                          />
+                          <span className="text-xs text-gray-600">{post.likes + (likedPosts.has(post.id) ? 1 : 0)}</span>
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => toggleSave(post.id)}
+                        className="text-gray-400 hover:text-pink-500 transition-colors"
                       >
-                        {service}
-                      </span>
-                    ))}
+                        <Bookmark
+                          size={16}
+                          className={savedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
+                        />
+                      </button>
+                    </div>
+
+                    {/* Bouton réservation */}
+                    <button
+                      onClick={() => handlePostClick(post)}
+                      className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-2 rounded-xl font-semibold text-sm mt-3 hover:from-pink-600 hover:to-rose-600 transition-all"
+                    >
+                      Réserver
+                    </button>
                   </div>
                 </div>
-
-                {/* Bouton réservation rapide */}
-                <div className="px-4 pb-4">
-                  <button
-                    onClick={() => handlePostClick(post)}
-                    className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 rounded-2xl font-semibold hover:from-pink-600 hover:to-rose-600 transition-all transform hover:scale-[1.02]"
-                  >
-                    Réserver en 2 clics
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 

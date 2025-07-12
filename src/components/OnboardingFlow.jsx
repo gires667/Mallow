@@ -35,17 +35,16 @@ const OnboardingFlow = ({ onComplete }) => {
 
   if (currentStep === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-100 via-pink-200 to-rose-200 flex flex-col">
-        {/* Image principale */}
+      <div className="min-h-screen bg-pink-50 flex flex-col">
+        {/* Image principale avec une vraie photo de manucure */}
         <div className="flex-1 flex items-center justify-center px-8 pt-16">
           <div className="w-full max-w-sm">
-            <div className="w-full h-80 bg-gradient-to-br from-pink-300 to-rose-400 rounded-3xl shadow-lg flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-4">
-                  <span className="text-4xl">💅</span>
-                </div>
-                <p className="text-white font-semibold text-lg">Manucure professionnelle</p>
-              </div>
+            <div className="w-full h-80 bg-pink-100 rounded-3xl shadow-lg overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=320&fit=crop"
+                alt="Manucure professionnelle"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
@@ -82,16 +81,15 @@ const OnboardingFlow = ({ onComplete }) => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* Image principale */}
+      {/* Image principale avec salon de manucure */}
       <div className="flex-1 flex items-center justify-center px-8 pt-16">
         <div className="w-full max-w-sm">
-          <div className="w-full h-80 bg-gradient-to-br from-blue-300 to-purple-400 rounded-3xl shadow-lg flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-white rounded-xl shadow-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📍</span>
-              </div>
-              <p className="text-white font-semibold">Trouvez près de chez vous</p>
-            </div>
+          <div className="w-full h-80 bg-gradient-to-br from-orange-300 to-red-400 rounded-3xl shadow-lg overflow-hidden">
+            <img
+              src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=320&fit=crop"
+              alt="Salon de manucure"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>
