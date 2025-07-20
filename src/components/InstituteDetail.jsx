@@ -55,19 +55,19 @@ const InstituteDetail = ({ institute, onBack, onBookService }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-50">
+      <div className="bg-card border-b border-border sticky top-0 z-50">
         <div className="flex items-center justify-between p-4">
-          <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full">
-            <ArrowLeft size={24} className="text-gray-700" />
+          <button onClick={onBack} className="p-2 hover:bg-muted rounded-full">
+            <ArrowLeft size={24} className="text-foreground" />
           </button>
           <button
             onClick={() => setIsFollowing(!isFollowing)}
             className={`px-6 py-2 rounded-2xl font-semibold transition-colors ${
               isFollowing 
-                ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
-                : 'bg-pink-500 text-white hover:bg-pink-600'
+                ? 'btn-secondary' 
+                : 'btn-primary'
             }`}
           >
             {isFollowing ? 'Suivi' : 'S\'abonner'}
@@ -76,35 +76,35 @@ const InstituteDetail = ({ institute, onBack, onBookService }) => {
       </div>
 
       {/* Institute Info */}
-      <div className="bg-white border-b border-gray-100 p-4">
+      <div className="bg-card border-b border-border p-4">
         <div className="flex items-center space-x-3 mb-4">
-          <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
-            <span className="text-white text-xl font-bold">💅</span>
+          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+            <span className="text-primary-foreground text-xl font-bold">💅</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-800">{institute.instituteName}</h1>
-            <div className="flex items-center space-x-1 text-sm text-gray-500 mb-1">
+            <h1 className="text-xl font-bold text-foreground">{institute.instituteName}</h1>
+            <div className="flex items-center space-x-1 text-sm text-muted-foreground mb-1">
               <MapPin size={12} />
               <span>{institute.location}</span>
             </div>
             <div className="flex items-center space-x-1">
               <Star className="w-4 h-4 text-yellow-400 fill-current" />
               <span className="text-sm font-medium">{institute.rating}</span>
-              <span className="text-sm text-gray-500">(124 avis)</span>
+              <span className="text-sm text-muted-foreground">(124 avis)</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-100">
+      <div className="bg-card border-b border-border">
         <div className="flex">
           <button
             onClick={() => setActiveTab('posts')}
             className={`flex-1 py-3 text-center font-medium transition-colors ${
               activeTab === 'posts'
-                ? 'text-pink-500 border-b-2 border-pink-500'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Posts

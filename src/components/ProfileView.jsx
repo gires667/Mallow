@@ -115,40 +115,40 @@ const ProfileView = ({ onBack, onLogout }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-50">
+      <div className="bg-card border-b border-border sticky top-0 z-50">
         <div className="flex items-center justify-between p-4">
           <button onClick={onBack}>
-            <ArrowLeft size={24} className="text-gray-600" />
+            <ArrowLeft size={24} className="text-muted-foreground" />
           </button>
           <button onClick={() => setShowSettings(true)}>
-            <Settings size={24} className="text-gray-600" />
+            <Settings size={24} className="text-muted-foreground" />
           </button>
         </div>
       </div>
 
       {/* Profile Header */}
-      <div className="bg-white px-6 py-6 text-center">
+      <div className="bg-card px-6 py-6 text-center">
         <div className="w-20 h-20 rounded-full mx-auto mb-3 overflow-hidden">
           <img src={profileData.avatar} alt="Profile" className="w-full h-full object-cover" />
         </div>
-        <h1 className="text-xl font-semibold text-gray-900 mb-1">{profileData.name}</h1>
+        <h1 className="text-xl font-semibold text-foreground mb-1">{profileData.name}</h1>
         <div className="flex items-center justify-center space-x-1">
           <Star size={16} className="text-yellow-400 fill-current" />
-          <span className="text-gray-600">{profileData.rating}</span>
+          <span className="text-muted-foreground">{profileData.rating}</span>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-100">
+      <div className="bg-card border-b border-border">
         <div className="flex">
           <button
             onClick={() => setActiveTab('posts')}
             className={`flex-1 py-3 px-6 text-center text-sm font-medium transition-colors ${
               activeTab === 'posts'
-                ? 'text-pink-500 border-b-2 border-pink-500'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             ENREGISTREMENTS

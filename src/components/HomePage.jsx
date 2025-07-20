@@ -235,29 +235,29 @@ const HomePage = ({ onLogout }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+      <header className="bg-card shadow-sm border-b border-border sticky top-0 z-50">
         <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">M</span>
+            <div className="w-8 h-8 rounded-full overflow-hidden bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-sm">M</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-800">Mallow</h1>
+              <h1 className="text-xl font-bold text-foreground">Mallow</h1>
               {posts[0]?.user && (
-                <p className="text-sm text-gray-600">{posts[0].user.greeting}</p>
+                <p className="text-sm text-muted-foreground">{posts[0].user.greeting}</p>
               )}
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="relative p-2 text-gray-600 hover:text-pink-500 transition-colors">
-              <div className="w-2 h-2 bg-pink-500 rounded-full absolute -top-0 -right-0"></div>
+            <button className="relative p-2 text-muted-foreground hover:text-primary transition-colors">
+              <div className="w-2 h-2 bg-primary rounded-full absolute -top-0 -right-0"></div>
               <span className="text-lg">🔔</span>
             </button>
             <button 
               onClick={onLogout}
-              className="p-2 text-gray-600 hover:text-pink-500 transition-colors"
+              className="p-2 text-muted-foreground hover:text-primary transition-colors"
             >
               <User size={20} />
             </button>
@@ -272,7 +272,7 @@ const HomePage = ({ onLogout }) => {
             {/* Grille 2x2 pour 8 posts */}
             <div className="grid grid-cols-2 gap-3">
               {posts.map((post) => (
-                <div key={post.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div key={post.id} className="card-elevated overflow-hidden hover:shadow-lg transition-all duration-300">
                   {/* Image uniforme */}
                   <div className="relative" onClick={() => handlePostClick(post)}>
                     <img
@@ -280,7 +280,7 @@ const HomePage = ({ onLogout }) => {
                       alt="Nail art"
                       className="w-full h-32 object-cover cursor-pointer"
                     />
-                    <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-xs font-semibold text-pink-600">
+                    <div className="absolute top-2 right-2 bg-card px-2 py-1 rounded-full text-xs font-semibold text-primary">
                       {post.price}
                     </div>
                   </div>
@@ -291,12 +291,12 @@ const HomePage = ({ onLogout }) => {
                       className="flex items-center space-x-2 mb-2 w-full text-left"
                       onClick={() => handleInstituteClick(post)}
                     >
-                      <div className="w-6 h-6 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs">💅</span>
+                      <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                        <span className="text-primary-foreground text-xs">💅</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-800 text-sm truncate">{post.instituteName}</h3>
-                        <div className="flex items-center space-x-1 text-xs text-gray-500">
+                        <h3 className="font-semibold text-foreground text-sm truncate">{post.instituteName}</h3>
+                        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                           <MapPin size={10} />
                           <span className="truncate">{post.location}</span>
                         </div>
@@ -312,18 +312,18 @@ const HomePage = ({ onLogout }) => {
                         >
                           <Heart
                             size={16}
-                            className={likedPosts.has(post.id) ? 'text-pink-500 fill-current' : 'text-gray-400'}
+                            className={likedPosts.has(post.id) ? 'text-primary fill-current' : 'text-muted-foreground'}
                           />
-                          <span className="text-xs text-gray-600">{post.likes + (likedPosts.has(post.id) ? 1 : 0)}</span>
+                          <span className="text-xs text-muted-foreground">{post.likes + (likedPosts.has(post.id) ? 1 : 0)}</span>
                         </button>
                       </div>
                       <button
                         onClick={() => toggleSave(post.id)}
-                        className="text-gray-400 hover:text-pink-500 transition-colors"
+                        className="text-muted-foreground hover:text-primary transition-colors"
                       >
                         <Bookmark
                           size={16}
-                          className={savedPosts.has(post.id) ? 'text-pink-500 fill-current' : ''}
+                          className={savedPosts.has(post.id) ? 'text-primary fill-current' : ''}
                         />
                       </button>
                     </div>
@@ -331,7 +331,7 @@ const HomePage = ({ onLogout }) => {
                     {/* Bouton réservation */}
                     <button
                       onClick={() => handlePostClick(post)}
-                      className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-2 rounded-xl font-semibold text-sm mt-3 hover:from-pink-600 hover:to-rose-600 transition-all"
+                      className="btn-primary w-full py-2 rounded-xl font-semibold text-sm mt-3"
                     >
                       Réserver
                     </button>
